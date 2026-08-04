@@ -124,8 +124,9 @@ export const useQuote = () => {
   // Estado do vendedor responsável
   const selectedSellerId = ref('fernando')
 
-  // Lista de Orçamentos e Apresentações Salvas
-  const savedQuotes = ref<SavedQuote[]>(MOCK_SAVED_QUOTES)
+  // Lista de Orçamentos e Apresentações Salvas (carregadas do Neon DB)
+  const savedQuotes = ref<SavedQuote[]>([])
+  const isLoadingQuotes = ref(false)
 
   // Tema visual (dark por padrão para combinar com a identidade Taurun)
   const isDarkMode = ref(true)
@@ -207,7 +208,7 @@ export const useQuote = () => {
     }
   }
 
-  // Salvar estado atual do formulário como rascunho
+  // Salvar estado atual do formulário como rascunho local
   const saveQuoteState = () => {
     if (!process.client) return
     const stateData = {
@@ -224,10 +225,42 @@ export const useQuote = () => {
     localStorage.setItem('taurun_quote_draft', JSON.stringify(stateData))
   }
 
-  // Salvar o orçamento atual na lista de apresentações montadas
-  const saveCurrentQuoteToList = () => {
-    const newQuote: SavedQuote = {
-      id: `quote-${Date.now()}`,
+  // Buscar a lista de orçamentos salvos diretamente do Neon DB
+  const fetchSavedQuotes = async () => {
+    if (!process.client) return
+    isLoadingQuotes.value = true
+    try {
+      const data = await $fetch<any[]>('/api/quotes')
+      if (Array.isArray(data)) {
+        savedQuotes.value = data.map(q => ({
+          id: q.id,
+          clientName: q.clientName,
+          clientPhone: q.clientPhone,
+          selectedProductId: q.selectedProductId,
+          productName: q.productName,
+          pricePerM2: Number(q.pricePerM2),
+          quantityM2: Number(q.quantityM2),
+          totalTatamePrice: Number(q.totalTatamePrice),
+          hasVinilClick: Boolean(q.hasVinilClick),
+          vinilQuantity: Number(q.vinilQuantity),
+          vinilUnitPrice: Number(q.vinilUnitPrice),
+          totalVinilPrice: Number(q.totalVinilPrice),
+          grandTotal: Number(q.grandTotal),
+          selectedSellerId: q.selectedSellerId,
+          sellerName: q.sellerName,
+          createdAt: q.createdAt ? new Date(q.createdAt).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'Agora mesmo'
+        }))
+      }
+    } catch (err) {
+      console.error('Erro ao buscar orçamentos do Neon DB:', err)
+    } finally {
+      isLoadingQuotes.value = false
+    }
+  }
+
+  // Salvar o orçamento atual no banco Neon
+  const saveCurrentQuoteToList = async () => {
+    const payload = {
       clientName: clientName.value || 'Cliente Especial',
       clientPhone: clientPhone.value || '-',
       selectedProductId: selectedProductId.value,
@@ -242,14 +275,45 @@ export const useQuote = () => {
       grandTotal: grandTotal.value,
       selectedSellerId: selectedSellerId.value,
       sellerName: selectedSeller.value.name,
-      createdAt: 'Agora mesmo'
     }
 
-    savedQuotes.value.unshift(newQuote)
-    if (process.client) {
-      localStorage.setItem('taurun_saved_quotes_list', JSON.stringify(savedQuotes.value))
+    try {
+      const newQuoteFromDb = await $fetch<any>('/api/quotes', {
+        method: 'POST',
+        body: payload
+      })
+
+      const formattedQuote: SavedQuote = {
+        id: newQuoteFromDb.id,
+        clientName: newQuoteFromDb.clientName,
+        clientPhone: newQuoteFromDb.clientPhone,
+        selectedProductId: newQuoteFromDb.selectedProductId,
+        productName: newQuoteFromDb.productName,
+        pricePerM2: Number(newQuoteFromDb.pricePerM2),
+        quantityM2: Number(newQuoteFromDb.quantityM2),
+        totalTatamePrice: Number(newQuoteFromDb.totalTatamePrice),
+        hasVinilClick: Boolean(newQuoteFromDb.hasVinilClick),
+        vinilQuantity: Number(newQuoteFromDb.vinilQuantity),
+        vinilUnitPrice: Number(newQuoteFromDb.vinilUnitPrice),
+        totalVinilPrice: Number(newQuoteFromDb.totalVinilPrice),
+        grandTotal: Number(newQuoteFromDb.grandTotal),
+        selectedSellerId: newQuoteFromDb.selectedSellerId,
+        sellerName: newQuoteFromDb.sellerName,
+        createdAt: newQuoteFromDb.createdAt ? new Date(newQuoteFromDb.createdAt).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'Agora mesmo'
+      }
+
+      savedQuotes.value.unshift(formattedQuote)
+      return formattedQuote
+    } catch (err) {
+      console.error('Erro ao salvar orçamento no banco Neon:', err)
+      const fallbackQuote: SavedQuote = {
+        id: `quote-${Date.now()}`,
+        ...payload,
+        createdAt: 'Agora mesmo'
+      }
+      savedQuotes.value.unshift(fallbackQuote)
+      return fallbackQuote
     }
-    return newQuote
   }
 
   // Carregar dados de um orçamento salvo no formulário ativo
@@ -266,15 +330,20 @@ export const useQuote = () => {
     saveQuoteState()
   }
 
-  // Excluir um orçamento salvo
-  const deleteSavedQuote = (id: string) => {
+  // Excluir um orçamento salvo no Neon DB
+  const deleteSavedQuote = async (id: string) => {
+    const previousQuotes = [...savedQuotes.value]
     savedQuotes.value = savedQuotes.value.filter(q => q.id !== id)
-    if (process.client) {
-      localStorage.setItem('taurun_saved_quotes_list', JSON.stringify(savedQuotes.value))
+
+    try {
+      await $fetch(`/api/quotes/${id}`, { method: 'DELETE' })
+    } catch (err) {
+      console.error('Erro ao excluir orçamento no banco Neon:', err)
+      savedQuotes.value = previousQuotes
     }
   }
 
-  // Carregar rascunho e lista do LocalStorage no startup
+  // Carregar rascunho e buscar lista de orçamentos do Neon DB no startup
   const loadQuoteState = () => {
     if (!process.client) return
     try {
@@ -291,17 +360,11 @@ export const useQuote = () => {
         if (parsed.vinilUnitPrice !== undefined) vinilUnitPrice.value = parsed.vinilUnitPrice
         if (parsed.selectedSellerId) selectedSellerId.value = parsed.selectedSellerId
       }
-
-      const savedList = localStorage.getItem('taurun_saved_quotes_list')
-      if (savedList) {
-        const parsedList = JSON.parse(savedList)
-        if (Array.isArray(parsedList) && parsedList.length > 0) {
-          savedQuotes.value = parsedList
-        }
-      }
     } catch (err) {
-      console.warn('Não foi possível carregar os dados salvos.', err)
+      console.warn('Não foi possível carregar os dados salvos do rascunho.', err)
     }
+
+    fetchSavedQuotes()
   }
 
   // Sync auto-save draft
@@ -335,6 +398,7 @@ export const useQuote = () => {
     selectedSellerId,
     selectedSeller,
     savedQuotes,
+    isLoadingQuotes,
     isDarkMode,
     setProduct,
     formatCurrency,
@@ -344,7 +408,9 @@ export const useQuote = () => {
     saveCurrentQuoteToList,
     loadSavedQuoteIntoActive,
     deleteSavedQuote,
+    fetchSavedQuotes,
     PRODUCTS,
     SELLERS
   }
 }
+
