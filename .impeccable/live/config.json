@@ -1,0 +1,7 @@
+{
+  "framework": "nuxt",
+  "files": ["app.vue", "pages/**/*.vue"],
+  "insertBefore": "</template>",
+  "commentSyntax": "<!--",
+  "cspChecked": true
+}
