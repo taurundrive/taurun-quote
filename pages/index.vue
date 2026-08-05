@@ -54,9 +54,21 @@
     <Transition name="modal">
       <div
         v-if="showModal"
-        class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm"
+        @click.self="showModal = false"
+        class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm cursor-pointer"
       >
-        <div class="glass-panel max-w-md w-full rounded-2xl p-6 space-y-6 text-center shadow-2xl border border-border">
+        <div
+          @click.stop
+          class="glass-panel max-w-md w-full rounded-2xl p-6 space-y-6 text-center shadow-2xl border border-border cursor-default relative"
+        >
+          <!-- Botão Fechar X no canto do modal -->
+          <button
+            @click="showModal = false"
+            type="button"
+            class="absolute top-4 right-4 text-muted-foreground hover:text-foreground transition-colors p-1"
+          >
+            ✕
+          </button>
           
           <div class="w-14 h-14 rounded-full bg-secondary text-foreground border border-border mx-auto flex items-center justify-center">
             <CheckCircle2 class="w-8 h-8" />
@@ -73,19 +85,19 @@
           <div class="bg-secondary/40 rounded-xl p-4 text-left space-y-2 text-xs border border-border">
             <div class="flex justify-between">
               <span class="text-muted-foreground">Produto:</span>
-              <span class="font-bold text-foreground">{{ lastSavedQuote?.productName }}</span>
+              <span class="font-bold text-foreground">{{ lastSavedQuote?.productName || quote.selectedProduct.value.name }}</span>
             </div>
             <div class="flex justify-between">
               <span class="text-muted-foreground">Metragem:</span>
-              <span class="font-bold text-foreground">{{ lastSavedQuote?.quantityM2 }} m²</span>
+              <span class="font-bold text-foreground">{{ lastSavedQuote?.quantityM2 || quote.quantityM2.value }} m²</span>
             </div>
-            <div v-if="lastSavedQuote?.hasVinilClick" class="flex justify-between">
+            <div v-if="lastSavedQuote?.hasVinilClick || quote.hasVinilClick.value" class="flex justify-between">
               <span class="text-muted-foreground">Proteções Vinil Click:</span>
-              <span class="font-bold text-foreground">{{ lastSavedQuote?.vinilQuantity }} un.</span>
+              <span class="font-bold text-foreground">{{ lastSavedQuote?.vinilQuantity || quote.vinilQuantity.value }} un.</span>
             </div>
             <div class="flex justify-between border-t border-border pt-2 font-bold text-sm text-foreground">
               <span>Investimento Total:</span>
-              <span>{{ quote.formatCurrency(lastSavedQuote?.grandTotal || 0) }}</span>
+              <span>{{ quote.formatCurrency(lastSavedQuote?.grandTotal || quote.grandTotal.value) }}</span>
             </div>
           </div>
 

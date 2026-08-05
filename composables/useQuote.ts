@@ -231,8 +231,8 @@ export const useQuote = () => {
     isLoadingQuotes.value = true
     try {
       const data = await $fetch<any[]>('/api/quotes')
-      if (Array.isArray(data)) {
-        savedQuotes.value = data.map(q => ({
+      if (Array.isArray(data) && data.length > 0) {
+        const fetched = data.map(q => ({
           id: q.id,
           clientName: q.clientName,
           clientPhone: q.clientPhone,
@@ -250,6 +250,8 @@ export const useQuote = () => {
           sellerName: q.sellerName,
           createdAt: q.createdAt ? new Date(q.createdAt).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'Agora mesmo'
         }))
+        savedQuotes.value = fetched
+        localStorage.setItem('taurun_saved_quotes_cache', JSON.stringify(fetched))
       }
     } catch (err) {
       console.error('Erro ao buscar orçamentos do Neon DB:', err)
@@ -259,61 +261,44 @@ export const useQuote = () => {
   }
 
   // Salvar o orçamento atual no banco Neon
-  const saveCurrentQuoteToList = async () => {
+  const saveCurrentQuoteToList = () => {
     const payload = {
+      id: `quote-${Date.now()}`,
       clientName: clientName.value || 'Cliente Especial',
       clientPhone: clientPhone.value || '-',
       selectedProductId: selectedProductId.value,
       productName: selectedProduct.value.name,
-      pricePerM2: pricePerM2.value,
-      quantityM2: quantityM2.value,
-      totalTatamePrice: totalTatamePrice.value,
-      hasVinilClick: hasVinilClick.value,
-      vinilQuantity: vinilQuantity.value,
-      vinilUnitPrice: vinilUnitPrice.value,
-      totalVinilPrice: totalVinilPrice.value,
-      grandTotal: grandTotal.value,
+      pricePerM2: Number(pricePerM2.value) || 0,
+      quantityM2: Number(quantityM2.value) || 0,
+      totalTatamePrice: Number(totalTatamePrice.value) || 0,
+      hasVinilClick: Boolean(hasVinilClick.value),
+      vinilQuantity: Number(vinilQuantity.value) || 0,
+      vinilUnitPrice: Number(vinilUnitPrice.value) || 0,
+      totalVinilPrice: Number(totalVinilPrice.value) || 0,
+      grandTotal: Number(grandTotal.value) || 0,
       selectedSellerId: selectedSellerId.value,
       sellerName: selectedSeller.value.name,
+      createdAt: 'Agora mesmo'
     }
 
-    try {
-      const newQuoteFromDb = await $fetch<any>('/api/quotes', {
+    // Adiciona imediatamente à lista local para resposta instantânea
+    savedQuotes.value.unshift(payload)
+
+    // Persiste no banco Neon em segundo plano
+    if (process.client) {
+      $fetch<any>('/api/quotes', {
         method: 'POST',
         body: payload
+      }).then(newDbQuote => {
+        if (newDbQuote?.id) {
+          payload.id = newDbQuote.id
+        }
+      }).catch(err => {
+        console.error('Erro ao salvar orçamento no banco Neon (salvo localmente):', err)
       })
-
-      const formattedQuote: SavedQuote = {
-        id: newQuoteFromDb.id,
-        clientName: newQuoteFromDb.clientName,
-        clientPhone: newQuoteFromDb.clientPhone,
-        selectedProductId: newQuoteFromDb.selectedProductId,
-        productName: newQuoteFromDb.productName,
-        pricePerM2: Number(newQuoteFromDb.pricePerM2),
-        quantityM2: Number(newQuoteFromDb.quantityM2),
-        totalTatamePrice: Number(newQuoteFromDb.totalTatamePrice),
-        hasVinilClick: Boolean(newQuoteFromDb.hasVinilClick),
-        vinilQuantity: Number(newQuoteFromDb.vinilQuantity),
-        vinilUnitPrice: Number(newQuoteFromDb.vinilUnitPrice),
-        totalVinilPrice: Number(newQuoteFromDb.totalVinilPrice),
-        grandTotal: Number(newQuoteFromDb.grandTotal),
-        selectedSellerId: newQuoteFromDb.selectedSellerId,
-        sellerName: newQuoteFromDb.sellerName,
-        createdAt: newQuoteFromDb.createdAt ? new Date(newQuoteFromDb.createdAt).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'Agora mesmo'
-      }
-
-      savedQuotes.value.unshift(formattedQuote)
-      return formattedQuote
-    } catch (err) {
-      console.error('Erro ao salvar orçamento no banco Neon:', err)
-      const fallbackQuote: SavedQuote = {
-        id: `quote-${Date.now()}`,
-        ...payload,
-        createdAt: 'Agora mesmo'
-      }
-      savedQuotes.value.unshift(fallbackQuote)
-      return fallbackQuote
     }
+
+    return payload
   }
 
   // Carregar dados de um orçamento salvo no formulário ativo
@@ -359,6 +344,14 @@ export const useQuote = () => {
         if (parsed.vinilQuantity !== undefined) vinilQuantity.value = parsed.vinilQuantity
         if (parsed.vinilUnitPrice !== undefined) vinilUnitPrice.value = parsed.vinilUnitPrice
         if (parsed.selectedSellerId) selectedSellerId.value = parsed.selectedSellerId
+      }
+
+      const cachedQuotes = localStorage.getItem('taurun_saved_quotes_cache')
+      if (cachedQuotes) {
+        const parsedCache = JSON.parse(cachedQuotes)
+        if (Array.isArray(parsedCache) && parsedCache.length > 0) {
+          savedQuotes.value = parsedCache
+        }
       }
     } catch (err) {
       console.warn('Não foi possível carregar os dados salvos do rascunho.', err)
