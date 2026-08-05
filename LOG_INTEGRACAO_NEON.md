@@ -57,3 +57,37 @@
 ---
 
 *Log gerado automaticamente pelo assistente AI Antigravity.*
+
+---
+
+## 📅 05/08/2026 — Apresentação T50-PRO: Slide de Orçamento
+
+**Commit:** `8aa2749e`  
+**Branch:** `main`  
+**Status:** Concluído ✅
+
+### Atividades Realizadas
+
+#### 1. Criação do Slide 09 — Orçamento & Investimento (T50-PRO)
+- CSS `s6-*` criado do zero após identificar que estava completamente ausente, causando o slide "quebrado".
+- HTML e CSS realinhados com o padrão do `revestimento.vue`:
+  - Cards de item com badge "Produto Principal" / "Adicional"
+  - Nome do produto em **Bodoni Moda** itálico
+  - Total em destaque verde esmeralda (`#34d399`) ao ativar Condição Especial
+  - Barra de total com gradiente e borda destacada
+  - Layout `s6-items-table` / `s6-item-row` / `s6-item-specs`
+
+#### 2. Correções de Conteúdo
+- Nome do item adicional corrigido para **"Proteções de parede Vinil Click"**
+- Descrição do item alinhada ao texto padrão do revestimento
+
+#### 3. Arquivos Commitados
+- `pages/apresentacao/t50-pro.vue` *(novo — 3.494 linhas)*
+- `public/brazil.svg`
+- `public/camadas/` — 8 imagens (quina-1..5, quina-mao, t50-pro-camadas, tatame-com-cantoneira, t50-pro-logo)
+- `public/tatame-com-cantoneira.png`
+- Ajustes em `revestimento.vue`, `pages/index.vue`, `SavedQuotesList.vue`
+
+---
+
+*Log gerado automaticamente pelo assistente AI Antigravity.*
