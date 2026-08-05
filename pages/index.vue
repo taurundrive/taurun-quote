@@ -117,8 +117,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, onMounted } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 import Header from '~/components/Header.vue'
 import QuoteForm from '~/components/QuoteForm.vue'
 import QuoteSummary from '~/components/QuoteSummary.vue'
@@ -128,8 +128,15 @@ import { CheckCircle2, Presentation } from 'lucide-vue-next'
 
 const quote = useQuote()
 const router = useRouter()
+const route = useRoute()
 
 const activeTab = ref<'form' | 'list'>('form')
+
+onMounted(() => {
+  if (route.query.tab === 'list') {
+    activeTab.value = 'list'
+  }
+})
 const showModal = ref(false)
 const lastSavedQuote = ref<SavedQuote | null>(null)
 

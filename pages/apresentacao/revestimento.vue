@@ -9,6 +9,18 @@
     ref="rootEl"
   >
 
+    <!-- ── Botão Sair da Apresentação (Voltar à Lista de Orçamentos) ── -->
+    <button
+      class="exit-pres-btn"
+      @click.stop="exitPresentation"
+      title="Sair da apresentação e voltar à lista de orçamentos"
+    >
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="exit-icon">
+        <path d="M19 12H5M12 19l-7-7 7-7"/>
+      </svg>
+      <span class="exit-label">Sair</span>
+    </button>
+
     <!-- ── Seta Esquerda ───────────────────────────────────────── -->
     <button
       class="nav-arrow nav-arrow--left"
@@ -60,13 +72,138 @@
     </section>
 
     <!-- ═══════════════════════════════════════════
+         SLIDE 01b — Problemas no Tatame de EVA
+    ════════════════════════════════════════════ -->
+    <section
+      class="slide slide-eva"
+      :class="{ active: currentSlide === 1 }"
+      ref="slideEva"
+    >
+      <div class="eva-container">
+        <!-- Header alinhado ao Design System (Bodoni Moda italic + sup uppercase) -->
+        <div class="eva-title-block" ref="evaHeader">
+          <span class="eva-sup">Os Desafios do</span>
+          <em class="eva-italic">Tatame de EVA</em>
+        </div>
+
+        <!-- Grid de 3 Cards Verticais de Problemas -->
+        <div class="eva-grid" ref="evaGrid">
+          <div
+            v-for="(item, index) in evaProblemas"
+            :key="index"
+            class="eva-card"
+            :class="{ 'is-revealed': item.revealed }"
+            @click="item.revealed = !item.revealed"
+          >
+            <!-- Top bar / número e título -->
+            <div class="eva-card-header">
+              <span class="eva-number">{{ item.number }}</span>
+              <h3 class="eva-card-title">{{ item.title }}</h3>
+            </div>
+
+            <!-- Imagem Vertical com Aspect-Ratio Portrait (3:4) -->
+            <div class="eva-media-wrap">
+              <!-- Overlay não revelado: minimalista e integrado às cores da apresentação -->
+              <div class="eva-unrevealed-overlay">
+                <div class="eva-icon-box">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="eva-icon">
+                    <path :d="item.iconPath" />
+                  </svg>
+                </div>
+                <span class="eva-touch-hint">Clique para revelar</span>
+              </div>
+
+              <!-- Foto do problema em proporção vertical -->
+              <img
+                :src="item.image"
+                :alt="item.title"
+                class="eva-img"
+              />
+            </div>
+
+            <!-- Descrição (revelada com o clique) -->
+            <div class="eva-desc-wrap">
+              <p class="eva-desc">{{ item.description }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         SLIDE 01c — A Solução: Instalação Sobre EVA
+    ════════════════════════════════════════════ -->
+    <section
+      class="slide slide-camadas"
+      :class="{ active: currentSlide === 2 }"
+      ref="slideCamadas"
+    >
+      <div class="camadas-container">
+        <!-- Header alinhado ao Design System -->
+        <div class="camadas-title-block" ref="camadasHeader">
+          <span class="camadas-sup">A Solução</span>
+          <em class="camadas-italic">Revestimento Taurun</em>
+        </div>
+
+        <!-- Estágio da Ilustração 3D com Linhas Animadas e Parallax no Mouse -->
+        <div
+          class="camadas-stage"
+          ref="camadasStage"
+          @mousemove="handleMouseMoveStage"
+          @mouseleave="handleMouseLeaveStage"
+        >
+          <!-- Render 3D em PNG Transparente -->
+          <img
+            src="/camadas/estrutura-tatame-transparent.png"
+            alt="Revestimento Taurun sob Tatame de EVA"
+            class="camadas-render-img"
+            ref="camadasImg"
+          />
+
+          <!-- SVG Overlay com Linhas Animadas -->
+          <svg class="camadas-lines-svg" viewBox="0 0 1000 600" preserveAspectRatio="xMidYMid meet">
+            <!-- Linha 1: Lona cinza Hexafibra -->
+            <g class="svg-group-hexa">
+              <circle cx="540" cy="285" r="4" class="svg-dot" />
+              <circle cx="540" cy="285" r="10" class="svg-dot-pulse" />
+              <polyline points="540,285 680,140 840,140" class="svg-line svg-line-hexa" ref="svgLineHexa" />
+            </g>
+
+            <!-- Linha 2: Tatame de EVA -->
+            <g class="svg-group-eva">
+              <circle cx="420" cy="405" r="4" class="svg-dot" />
+              <circle cx="420" cy="405" r="10" class="svg-dot-pulse" />
+              <polyline points="420,405 240,470 100,470" class="svg-line svg-line-eva" ref="svgLineEva" />
+            </g>
+          </svg>
+
+          <!-- Callout 1 (Lona Cinza - Logo Hexafibra) -->
+          <div class="camadas-callout callout-hexafibra" ref="contentHexa">
+            <div class="callout-box">
+              <img src="/camadas/hexafibra-logo.png" alt="HEXAFIBRA®" class="callout-logo" />
+              <span class="callout-tag">Revestimento Vinílico Unificado</span>
+            </div>
+          </div>
+
+          <!-- Callout 2 (Base de EVA - "O seu tatame de eva") -->
+          <div class="camadas-callout callout-eva" ref="contentEva">
+            <div class="callout-box">
+              <span class="callout-title">O seu tatame de eva</span>
+              <span class="callout-tag">Base de amortecimento mantida</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
          SLIDE 02 — A Superfície Perfeita
          Layout: 45% texto | 55% imagem full-bleed
          Linhas cruzam da área de texto até a imagem
     ════════════════════════════════════════════ -->
     <section
       class="slide slide-02"
-      :class="{ active: currentSlide === 1 }"
+      :class="{ active: currentSlide === 3 }"
       ref="slide02"
     >
       <!-- Coluna de texto — 45% -->
@@ -81,7 +218,7 @@
         <!-- Conceito -->
         <div class="s2-concept" ref="s2Concept">
           <p class="s2-concept-lead">O conceito central é o</p>
-          <strong class="s2-concept-key">tatame unificado</strong>
+          <strong class="s2-concept-key">TATAME UNIFICADO</strong>
           <p class="s2-concept-sub">Uma superfície. Sem divisões, fitas ou velcros.</p>
         </div>
 
@@ -90,7 +227,7 @@
           <li class="s2-topic" ref="topic1">
             <div class="s2-topic-text">
               <span class="s2-bullet">01</span>
-              <p><strong>Hexafibra exclusiva</strong> — material sintético desenvolvido para o Jiu Jitsu.</p>
+              <p><strong>Tecnologia exclusiva</strong> — a única superfície feita exclusivamente para artes marciais.</p>
             </div>
             <!-- Linha que parte daqui e vai até a imagem -->
             <div class="s2-line-wrap">
@@ -111,7 +248,7 @@
           <li class="s2-topic" ref="topic3">
             <div class="s2-topic-text">
               <span class="s2-bullet">03</span>
-              <p><strong>Encaixe invisível</strong> — tecnologia click sem parafusos aparentes.</p>
+              <p><strong>Não escorrega</strong> — devido à textura em alto-relevo.</p>
             </div>
             <div class="s2-line-wrap">
               <div class="s2-line" ref="line3" />
@@ -142,7 +279,7 @@
     ════════════════════════════════════════════ -->
     <section
       class="slide slide-03"
-      :class="{ active: currentSlide === 2 }"
+      :class="{ active: currentSlide === 4 }"
     >
       <!-- Coluna Esquerda — reveal antes/depois -->
       <div class="s3-left">
@@ -224,7 +361,7 @@
     ════════════════════════════════════════════ -->
     <section
       class="slide slide-04"
-      :class="{ active: currentSlide === 3 }"
+      :class="{ active: currentSlide === 5 }"
       ref="slide04"
     >
       <div class="s4-container">
@@ -273,7 +410,7 @@
     ════════════════════════════════════════════ -->
     <section
       class="slide slide-05"
-      :class="{ active: currentSlide === 4 }"
+      :class="{ active: currentSlide === 6 }"
       ref="slide05"
     >
       <div class="s5-container">
@@ -330,7 +467,7 @@
     ════════════════════════════════════════════ -->
     <section
       class="slide slide-06"
-      :class="{ active: currentSlide === 5 }"
+      :class="{ active: currentSlide === 7 }"
       ref="slide06"
     >
       <div class="s6-container">
@@ -357,6 +494,12 @@
               <span class="s6-meta-label">CONSULTOR TAURUN</span>
               <span class="s6-meta-value">{{ quote.selectedSeller.value.name }}</span>
             </div>
+            <!-- Badge Indicador de Tabela / Condição Especial -->
+            <div class="s6-meta-item s6-meta-item--status">
+              <span class="s6-status-badge" :class="{ 'is-special': isDiscountApplied }">
+                {{ isDiscountApplied ? '✓ Tabela Promocional do Consultor' : 'Tabela Oficial de Fábrica' }}
+              </span>
+            </div>
           </div>
 
           <!-- Tabela de Produtos / Itens Cotados -->
@@ -376,11 +519,11 @@
                 </div>
                 <div class="s6-spec">
                   <span class="s6-spec-label">Valor / m²</span>
-                  <span class="s6-spec-val">{{ quote.formatCurrency(quote.pricePerM2.value) }}</span>
+                  <span class="s6-spec-val">{{ quote.formatCurrency(displayPricePerM2) }}</span>
                 </div>
                 <div class="s6-spec s6-spec--subtotal">
                   <span class="s6-spec-label">Subtotal</span>
-                  <span class="s6-spec-val">{{ quote.formatCurrency(quote.totalTatamePrice.value) }}</span>
+                  <span class="s6-spec-val">{{ quote.formatCurrency(displayTotalTatame) }}</span>
                 </div>
               </div>
             </div>
@@ -399,25 +542,54 @@
                 </div>
                 <div class="s6-spec">
                   <span class="s6-spec-label">Valor un.</span>
-                  <span class="s6-spec-val">{{ quote.formatCurrency(quote.vinilUnitPrice.value) }}</span>
+                  <span class="s6-spec-val">{{ quote.formatCurrency(displayVinilUnitPrice) }}</span>
                 </div>
                 <div class="s6-spec s6-spec--subtotal">
                   <span class="s6-spec-label">Subtotal</span>
-                  <span class="s6-spec-val">{{ quote.formatCurrency(quote.totalVinilPrice.value) }}</span>
+                  <span class="s6-spec-val">{{ quote.formatCurrency(displayTotalVinil) }}</span>
                 </div>
               </div>
             </div>
 
           </div>
 
-          <!-- Total Geral -->
+          <!-- Total Geral e Botão Interativo de Condição Especial -->
           <div class="s6-total-bar">
             <div class="s6-total-block">
-              <span class="s6-total-label">INVESTIMENTO TOTAL ESTIMADO</span>
-              <div class="s6-total-amount">
-                {{ quote.formatCurrency(quote.grandTotal.value) }}
+              <span class="s6-total-label">
+                {{ isDiscountApplied ? 'INVESTIMENTO FINAL (CONDIÇÃO ESPECIAL)' : 'VALOR DE TABELA OFICIAL' }}
+              </span>
+
+              <!-- Preço original riscado + preço promocional real -->
+              <div class="s6-total-amount-wrap">
+                <span v-if="isDiscountApplied" class="s6-strikethrough-amount">
+                  {{ quote.formatCurrency(inflatedGrandTotal) }}
+                </span>
+                <div class="s6-total-amount" :class="{ 'is-special': isDiscountApplied }">
+                  {{ quote.formatCurrency(displayGrandTotal) }}
+                </div>
               </div>
             </div>
+
+            <!-- Botão Interativo para o Vendedor Alternar entre Tabela Inflada e Preço Real -->
+            <button
+              class="s6-discount-toggle-btn"
+              :class="{ 'is-applied': isDiscountApplied }"
+              @click="isDiscountApplied = !isDiscountApplied"
+            >
+              <span v-if="!isDiscountApplied" class="s6-toggle-content">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="s6-toggle-icon">
+                  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+                </svg>
+                <span>Aplicar Condição Especial</span>
+              </span>
+              <span v-else class="s6-toggle-content">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="s6-toggle-icon">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                <span>Condição Especial Aplicada</span>
+              </span>
+            </button>
           </div>
 
           <!-- Benefícios e Garantia -->
@@ -436,8 +608,15 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, nextTick } from 'vue'
+import { useRouter } from 'vue-router'
 import gsap from 'gsap'
 import { useQuote } from '~/composables/useQuote'
+
+const router = useRouter()
+
+function exitPresentation() {
+  router.push('/?tab=list')
+}
 
 useHead({
   title: 'Revestimento Taurun — Apresentação Comercial',
@@ -448,7 +627,7 @@ useHead({
 const quote = useQuote()
 
 // ── Slides & navegação ────────────────────────────────────────
-const slides = [0, 1, 2, 3, 4, 5]
+const slides = [0, 1, 2, 3, 4, 5, 6, 7]
 const currentSlide = ref(0)
 
 function nextSlide() {
@@ -461,11 +640,13 @@ function goTo(i: number) {
   if (i === currentSlide.value) return
   currentSlide.value = i
   if (i === 0) animateSlide01()
-  if (i === 1) animateSlide02()
-  if (i === 2) animateSlide03()
-  if (i === 3) animateSlide04()
-  if (i === 4) animateSlide05()
-  if (i === 5) animateSlide06()
+  if (i === 1) animateSlideEva()
+  if (i === 2) animateSlideCamadas()
+  if (i === 3) animateSlide02()
+  if (i === 4) animateSlide03()
+  if (i === 5) animateSlide04()
+  if (i === 6) animateSlide05()
+  if (i === 7) animateSlide06()
 }
 
 // ── Refs ─────────────────────────────────────────────────────
@@ -475,6 +656,121 @@ const lineBottom  = ref<HTMLElement>()
 const logoContainer = ref<HTMLElement>()
 const logoImg     = ref<HTMLElement>()
 const taglineEl   = ref<HTMLElement>()
+
+// ── Slide Camadas refs & mouse parallax ────────────────────────
+const slideCamadas  = ref<HTMLElement>()
+const camadasHeader = ref<HTMLElement>()
+const camadasStage  = ref<HTMLElement>()
+const camadasImg    = ref<HTMLElement>()
+const svgLineHexa   = ref<SVGPolylineElement>()
+const svgLineEva    = ref<SVGPolylineElement>()
+const contentHexa   = ref<HTMLElement>()
+const contentEva    = ref<HTMLElement>()
+
+function handleMouseMoveStage(e: MouseEvent) {
+  if (!camadasStage.value || !camadasImg.value) return
+  const rect = camadasStage.value.getBoundingClientRect()
+  const x = (e.clientX - rect.left) / rect.width - 0.5
+  const y = (e.clientY - rect.top) / rect.height - 0.5
+
+  gsap.to(camadasImg.value, {
+    rotationY: x * 18,
+    rotationX: -y * 18,
+    x: x * 20,
+    y: y * 20,
+    duration: 0.4,
+    ease: 'power2.out',
+    overwrite: 'auto'
+  })
+}
+
+function handleMouseLeaveStage() {
+  if (!camadasImg.value) return
+  gsap.to(camadasImg.value, {
+    rotationY: 0,
+    rotationX: 0,
+    x: 0,
+    y: 0,
+    duration: 0.8,
+    ease: 'power2.out',
+    overwrite: 'auto'
+  })
+}
+
+// ── Preço inflado (+35%) & Condição Especial do Vendedor ──────
+const isDiscountApplied = ref(false)
+const INFLATION_FACTOR = 1.35
+
+const displayPricePerM2 = computed(() => {
+  return isDiscountApplied.value
+    ? quote.pricePerM2.value
+    : quote.pricePerM2.value * INFLATION_FACTOR
+})
+
+const displayTotalTatame = computed(() => {
+  return isDiscountApplied.value
+    ? quote.totalTatamePrice.value
+    : quote.totalTatamePrice.value * INFLATION_FACTOR
+})
+
+const displayVinilUnitPrice = computed(() => {
+  return isDiscountApplied.value
+    ? quote.vinilUnitPrice.value
+    : quote.vinilUnitPrice.value * INFLATION_FACTOR
+})
+
+const displayTotalVinil = computed(() => {
+  return isDiscountApplied.value
+    ? quote.totalVinilPrice.value
+    : quote.totalVinilPrice.value * INFLATION_FACTOR
+})
+
+const displayGrandTotal = computed(() => {
+  return isDiscountApplied.value
+    ? quote.grandTotal.value
+    : quote.grandTotal.value * INFLATION_FACTOR
+})
+
+const inflatedGrandTotal = computed(() => {
+  return quote.grandTotal.value * INFLATION_FACTOR
+})
+
+const discountSavings = computed(() => {
+  return inflatedGrandTotal.value - quote.grandTotal.value
+})
+const slideEva  = ref<HTMLElement>()
+const evaHeader = ref<HTMLElement>()
+const evaGrid   = ref<HTMLElement>()
+
+const evaProblemas = ref([
+  {
+    id: 'mau-cheiro',
+    number: '01',
+    title: 'Mau Cheiro',
+    description: 'Absorve suor, causando característico mau cheiro.',
+    image: '/eva-problemas/mau-cheiro.jpg',
+    revealed: false,
+    iconPath: 'M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z M9.5 13a2.5 2.5 0 0 0 5 0'
+  },
+  {
+    id: 'sujeira',
+    number: '02',
+    title: 'Sujeira',
+    description: 'Sujeiras que se acumulam entre as frestas do tatame.',
+    image: '/eva-problemas/sujeira.jpg',
+    revealed: false,
+    iconPath: 'M4 6h16M4 12h16M4 18h16'
+  },
+  {
+    id: 'buracos',
+    number: '03',
+    title: 'Buracos',
+    description: 'Buracos no meio do tatame, causando acidentes.',
+    image: '/eva-problemas/buracos.jpg',
+    revealed: false,
+    iconPath: 'M12 9v4m0 4h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z'
+  }
+])
 
 const slide02     = ref<HTMLElement>()
 const s2Text      = ref<HTMLElement>()
@@ -636,6 +932,53 @@ function animateSlide01() {
     .to(lineBottom.value,    { scaleX: 1, duration: 0.8, ease: 'expo.out' }, 0.4)
     .to(logoContainer.value, { scale: 1, autoAlpha: 1, duration: 0.9, ease: 'expo.out' }, 0.5)
     .to(taglineEl.value,     { autoAlpha: 1, y: 0, duration: 0.5, ease: 'power2.out' }, 1.1)
+}
+
+// ── GSAP — Slide EVA Problemas ────────────────────────────────
+function animateSlideEva() {
+  const tl = gsap.timeline({ defaults: { ease: 'expo.out' } })
+  evaProblemas.value.forEach(p => { p.revealed = false })
+
+  gsap.set(evaHeader.value, { autoAlpha: 0, y: -25 })
+  if (evaGrid.value?.children) {
+    gsap.set(evaGrid.value.children, { autoAlpha: 0, scale: 0.9, y: 30 })
+  }
+
+  tl
+    .to(evaHeader.value, { autoAlpha: 1, y: 0, duration: 0.8 }, 0)
+    .to(evaGrid.value?.children || [], {
+      autoAlpha: 1,
+      scale: 1,
+      y: 0,
+      duration: 0.7,
+      stagger: 0.12,
+    }, 0.2)
+}
+
+// ── GSAP — Slide Camadas (Instalação Sobre EVA) ───────────────
+function animateSlideCamadas() {
+  const tl = gsap.timeline({ defaults: { ease: 'expo.out' } })
+
+  gsap.set(camadasHeader.value, { autoAlpha: 0, y: -25 })
+  gsap.set(camadasImg.value,    { autoAlpha: 0, scale: 0.94 })
+  gsap.set([contentHexa.value, contentEva.value], { autoAlpha: 0, y: 12 })
+
+  if (svgLineHexa.value) {
+    const len = svgLineHexa.value.getTotalLength?.() || 400
+    gsap.set(svgLineHexa.value, { strokeDasharray: len, strokeDashoffset: len })
+  }
+  if (svgLineEva.value) {
+    const len = svgLineEva.value.getTotalLength?.() || 400
+    gsap.set(svgLineEva.value, { strokeDasharray: len, strokeDashoffset: len })
+  }
+
+  tl
+    .to(camadasHeader.value, { autoAlpha: 1, y: 0, duration: 0.8 }, 0)
+    .to(camadasImg.value,    { autoAlpha: 1, scale: 1, duration: 0.9 }, 0.2)
+    .to(svgLineHexa.value,   { strokeDashoffset: 0, duration: 0.8, ease: 'power2.inOut' }, 0.5)
+    .to(contentHexa.value,   { autoAlpha: 1, y: 0, duration: 0.5 }, 0.9)
+    .to(svgLineEva.value,    { strokeDashoffset: 0, duration: 0.8, ease: 'power2.inOut' }, 0.7)
+    .to(contentEva.value,    { autoAlpha: 1, y: 0, duration: 0.5 }, 1.1)
 }
 
 // ── GSAP — Slide 02 — abuso total ────────────────────────────
@@ -806,7 +1149,7 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&display=swap');
 
 /* ── Raiz ─────────────────────────────────────────────────── */
 .pres-root {
@@ -831,6 +1174,46 @@ onMounted(async () => {
 .slide.active {
   opacity: 1;
   pointer-events: auto;
+}
+
+/* ── Botão Sair da Apresentação ──────────────────────────── */
+.exit-pres-btn {
+  position: fixed;
+  top: clamp(1rem, 2.5vw, 1.8rem);
+  left: clamp(1rem, 2.5vw, 1.8rem);
+  z-index: 210;
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.5rem 1.1rem;
+  border-radius: 30px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: rgba(255, 255, 255, 0.7);
+  font-size: clamp(0.75rem, 0.9vw, 0.85rem);
+  font-weight: 500;
+  cursor: pointer;
+  backdrop-filter: blur(14px);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.exit-pres-btn:hover {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.4);
+  color: #ffffff;
+  transform: translateX(-3px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+}
+
+.exit-icon {
+  width: 16px;
+  height: 16px;
+  transition: transform 0.3s ease;
+}
+
+.exit-pres-btn:hover .exit-icon {
+  transform: translateX(-3px);
 }
 
 /* ── Setas de navegação laterais ─────────────────────────── */
@@ -943,6 +1326,379 @@ onMounted(async () => {
 }
 
 /* ══════════════════════════════
+   SLIDE CAMADAS — Estrutura Taurun sobre EVA
+══════════════════════════════ */
+.slide-camadas {
+  align-items: center;
+  justify-content: center;
+  padding: clamp(2rem, 4vw, 4rem);
+  background: #0d1012;
+}
+
+.camadas-container {
+  max-width: 1100px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(1rem, 2vw, 1.8rem);
+}
+
+.camadas-title-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  line-height: 1;
+  gap: 0.1rem;
+}
+
+.camadas-sup {
+  font-size: clamp(0.8rem, 1.3vw, 1.1rem);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+  font-weight: 400;
+}
+
+.camadas-italic {
+  font-family: 'Bodoni Moda', Georgia, serif;
+  font-style: italic;
+  font-size: clamp(2.8rem, 5.5vw, 5rem);
+  color: #a3a3a3;
+  font-weight: 400;
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+}
+
+/* Palco da ilustração + SVG de linhas + 3D Tilt */
+.camadas-stage {
+  position: relative;
+  width: 100%;
+  max-width: 960px;
+  aspect-ratio: 1000 / 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 1000px;
+  transform-style: preserve-3d;
+  cursor: pointer;
+}
+
+.camadas-render-img {
+  width: 68%;
+  height: auto;
+  max-height: 82%;
+  object-fit: contain;
+  filter: drop-shadow(0 20px 40px rgba(0,0,0,0.7));
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+/* SVG overlay */
+.camadas-lines-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.svg-line {
+  fill: none;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.svg-line-hexa {
+  stroke: rgba(255, 255, 255, 0.85);
+}
+
+.svg-line-eva {
+  stroke: rgba(255, 255, 255, 0.65);
+}
+
+.svg-dot {
+  fill: #ffffff;
+}
+
+.svg-dot-pulse {
+  fill: rgba(255, 255, 255, 0.3);
+  animation: dotPulse 2s infinite ease-in-out;
+}
+
+@keyframes dotPulse {
+  0%, 100% { transform: scale(1); opacity: 0.3; }
+  50% { transform: scale(1.6); opacity: 0.8; }
+}
+
+/* Content Callouts */
+.camadas-callout {
+  position: absolute;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+}
+
+.callout-hexafibra {
+  top: 14%;
+  right: 6%;
+  align-items: flex-start;
+}
+
+.callout-eva {
+  bottom: 14%;
+  left: 6%;
+  align-items: flex-start;
+}
+
+.callout-box {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  padding: 0.85rem 1.25rem;
+  border-radius: 12px;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.45);
+}
+
+.callout-logo {
+  width: clamp(130px, 15vw, 170px);
+  height: auto;
+  aspect-ratio: 444 / 101;
+  object-fit: contain;
+  display: block;
+}
+
+.callout-title {
+  font-size: clamp(1rem, 1.4vw, 1.25rem);
+  font-weight: 600;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+}
+
+.callout-tag {
+  font-size: clamp(0.7rem, 0.9vw, 0.82rem);
+  color: rgba(255, 255, 255, 0.45);
+  font-weight: 300;
+  letter-spacing: 0.05em;
+}
+
+/* ══════════════════════════════
+   SLIDE EVA — Problemas Tatame EVA (Design System Alinhado)
+══════════════════════════════ */
+.slide-eva {
+  align-items: center;
+  justify-content: center;
+  padding: clamp(2rem, 4vw, 4rem);
+  background: #0d1012;
+}
+
+.eva-container {
+  max-width: 1100px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(1.2rem, 2.5vw, 2.2rem);
+}
+
+/* Header alinhado ao Slide 02 e Slide 03 */
+.eva-title-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  line-height: 1;
+  gap: 0.1rem;
+}
+
+.eva-sup {
+  font-size: clamp(0.8rem, 1.3vw, 1.1rem);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+  font-weight: 400;
+}
+
+.eva-italic {
+  font-family: 'Bodoni Moda', Georgia, serif;
+  font-style: italic;
+  font-size: clamp(3rem, 6vw, 5.5rem);
+  color: #a3a3a3;
+  font-weight: 400;
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+}
+
+/* Grid de 3 colunas verticais */
+.eva-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(1.2rem, 2.5vw, 2.2rem);
+  width: 100%;
+}
+
+@media (max-width: 850px) {
+  .eva-grid {
+    grid-template-columns: 1fr;
+    max-width: 380px;
+  }
+}
+
+.eva-card {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 14px;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.35s ease, background 0.35s ease, transform 0.35s ease;
+  backdrop-filter: blur(10px);
+}
+
+.eva-card:hover {
+  border-color: rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.04);
+  transform: translateY(-3px);
+}
+
+.eva-card.is-revealed {
+  border-color: rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.eva-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.eva-number {
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.eva-card-title {
+  font-size: clamp(1rem, 1.3vw, 1.25rem);
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+/* Área de Mídia Vertical (3:4) */
+.eva-media-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #111417;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.eva-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  opacity: 0;
+  transform: scale(1.05);
+  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.eva-card.is-revealed .eva-img {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Overlay unrevealed minimalista */
+.eva-unrevealed-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.85rem;
+  background: rgba(13, 16, 18, 0.88);
+  backdrop-filter: blur(10px);
+  transition: opacity 0.4s ease, visibility 0.4s;
+}
+
+.eva-card.is-revealed .eva-unrevealed-overlay {
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
+}
+
+.eva-icon-box {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: rgba(13, 16, 18, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
+}
+
+.eva-card:hover .eva-icon-box {
+  border-color: rgba(255, 255, 255, 0.4);
+  color: #ffffff;
+  transform: scale(1.08);
+}
+
+.eva-icon {
+  width: 22px;
+  height: 22px;
+}
+
+.eva-touch-hint {
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.3);
+  font-weight: 400;
+}
+
+/* Descrição (revelada) */
+.eva-desc-wrap {
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+}
+
+.eva-desc {
+  font-size: clamp(0.85rem, 1.1vw, 0.95rem);
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.35);
+  margin: 0;
+  font-weight: 300;
+  transition: color 0.35s ease;
+}
+
+.eva-card.is-revealed .eva-desc {
+  color: rgba(255, 255, 255, 0.88);
+  font-weight: 400;
+}
+
+/* ══════════════════════════════
    SLIDE 02 — Superfície Perfeita
 ══════════════════════════════ */
 .slide-02 {
@@ -1001,20 +1757,25 @@ onMounted(async () => {
   letter-spacing: 0.01em;
 }
 .s2-concept-key {
-  /* título bold — destaque máximo */
-  font-size: clamp(2rem, 4vw, 4.5rem);
-  font-weight: 800;
+  /* título bold — Bebas Neue bold italic em caixa alta */
+  font-family: 'Bebas Neue', sans-serif;
+  font-weight: 700;
+  font-style: italic;
+  text-transform: uppercase;
+  font-size: clamp(3.2rem, 6vw, 6.2rem);
   color: #ffffff;
-  letter-spacing: -0.03em;
-  line-height: 1;
+  letter-spacing: 0.04em;
+  line-height: 0.92;
+  transform: skewX(-5deg);
+  display: inline-block;
 }
 .s2-concept-sub {
-  /* detalhe menor */
-  font-size: clamp(0.75rem, 1vw, 0.95rem);
-  color: rgba(255,255,255,0.22);
+  /* detalhe expandido e mais legível */
+  font-size: clamp(1rem, 1.4vw, 1.25rem);
+  color: rgba(255, 255, 255, 0.65);
   font-weight: 300;
-  margin: 0.5rem 0 0;
-  letter-spacing: 0.015em;
+  margin: 0.6rem 0 0;
+  letter-spacing: 0.02em;
 }
 
 /* Tópicos */
@@ -1992,6 +2753,90 @@ onMounted(async () => {
   transform: translateY(-2px);
   background: #f0f0f0;
   box-shadow: 0 15px 35px rgba(255,255,255,0.25);
+}
+
+.s6-status-badge {
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 0.3rem 0.75rem;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 500;
+  transition: all 0.35s ease;
+}
+
+.s6-status-badge.is-special {
+  background: rgba(16, 185, 129, 0.12);
+  border-color: rgba(16, 185, 129, 0.35);
+  color: #34d399;
+}
+
+.s6-total-amount-wrap {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.s6-strikethrough-amount {
+  font-size: clamp(1.2rem, 2.2vw, 2rem);
+  color: rgba(255, 255, 255, 0.35);
+  text-decoration: line-through;
+  font-weight: 400;
+}
+
+.s6-total-amount.is-special {
+  color: #34d399;
+}
+
+.s6-savings-tag {
+  font-size: 0.75rem;
+  color: #34d399;
+  letter-spacing: 0.05em;
+  font-weight: 400;
+}
+
+.s6-discount-toggle-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.9rem 1.6rem;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  backdrop-filter: blur(8px);
+}
+
+.s6-discount-toggle-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.4);
+  transform: translateY(-2px);
+}
+
+.s6-discount-toggle-btn.is-applied {
+  background: rgba(16, 185, 129, 0.15);
+  border-color: rgba(16, 185, 129, 0.45);
+  color: #34d399;
+  box-shadow: 0 0 25px rgba(16, 185, 129, 0.2);
+}
+
+.s6-toggle-content {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.s6-toggle-icon {
+  width: 18px;
+  height: 18px;
 }
 
 .s6-perks {

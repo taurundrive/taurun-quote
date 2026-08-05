@@ -15,3 +15,4 @@ dist/
 *.log
 logs/
 .DS_Store
+scratch/
