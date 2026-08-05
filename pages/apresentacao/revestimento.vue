@@ -1835,14 +1835,14 @@ onMounted(async () => {
 }
 
 .s2-line {
-  height: 1px;
+  height: 2.5px;
   /* A linha vai da esquerda e cruza para a coluna de imagem */
   width: calc(100% + 55vw); /* cruza toda a coluna da imagem */
   background: linear-gradient(
     90deg,
-    rgba(255,255,255,0.45) 0%,
-    rgba(255,255,255,0.15) 40%,
-    rgba(255,255,255,0.04) 75%,
+    rgba(255,255,255,0.85) 0%,
+    rgba(255,255,255,0.45) 40%,
+    rgba(255,255,255,0.15) 75%,
     transparent 100%
   );
   transform-origin: left center;
@@ -2092,9 +2092,9 @@ onMounted(async () => {
   bottom: 0;
   left: 50%;
   transform: translateX(-50%);
-  width: 2px;
-  background: rgba(255,255,255,0.75);
-  box-shadow: 0 0 10px rgba(255,255,255,0.3);
+  width: 3.5px;
+  background: rgba(255,255,255,0.9);
+  box-shadow: 0 0 12px rgba(255,255,255,0.5);
   pointer-events: none;
 }
 

@@ -1,0 +1,3532 @@
+<template>
+  <!-- Apresentação comercial — Taurun T50-PRO -->
+  <div
+    class="pres-root"
+    @keydown.right.prevent="nextSlide"
+    @keydown.left.prevent="prevSlide"
+    @keydown.space.prevent="nextSlide"
+    tabindex="0"
+    ref="rootEl"
+  >
+
+    <!-- ── Botão Sair da Apresentação (Voltar à Lista de Orçamentos) ── -->
+    <button
+      class="exit-pres-btn"
+      @click.stop="exitPresentation"
+      title="Sair da apresentação e voltar à lista de orçamentos"
+    >
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="exit-icon">
+        <path d="M19 12H5M12 19l-7-7 7-7"/>
+      </svg>
+      <span class="exit-label">Sair</span>
+    </button>
+
+    <!-- ── Seta Esquerda ───────────────────────────────────────── -->
+    <button
+      class="nav-arrow nav-arrow--left"
+      :class="{ hidden: currentSlide === 0 }"
+      @click.stop="prevSlide"
+      aria-label="Slide anterior"
+    >
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M15 18l-6-6 6-6"/>
+      </svg>
+    </button>
+
+    <!-- ── Seta Direita ───────────────────────────────────────── -->
+    <button
+      class="nav-arrow nav-arrow--right"
+      :class="{ hidden: currentSlide === slides.length - 1 }"
+      @click.stop="nextSlide"
+      aria-label="Próximo slide"
+    >
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M9 18l6-6-6-6"/>
+      </svg>
+    </button>
+
+    <!-- ── Contador de slide ───────────────────────────────────── -->
+    <div class="slide-counter">
+      {{ currentSlide + 1 }} / {{ slides.length }}
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         SLIDE 01 — Logo Reveal Capa (T50-PRO)
+    ════════════════════════════════════════════ -->
+    <section
+      class="slide slide-01"
+      :class="{ active: currentSlide === 0 }"
+    >
+      <div class="particles">
+        <span v-for="n in 18" :key="n" class="particle" :style="particleStyle(n)" />
+      </div>
+
+      <div class="logo-wrapper">
+        <div class="logo-line logo-line--top" ref="lineTop" />
+        <div class="logo-container" ref="logoContainer">
+          <img src="/logo-taurun.png" alt="Taurun" class="taurun-logo" ref="logoImg" />
+        </div>
+        <div class="logo-line logo-line--bottom" ref="lineBottom" />
+        <p class="tagline" ref="taglineEl">T50-PRO — Tatame Profissional sem Encaixes</p>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         SLIDE 02 — Sucesso de Desempenho (Mapa Oficial do Brasil Tech e Animado - 10s)
+    ════════════════════════════════════════════ -->
+    <section
+      class="slide slide-mapa"
+      :class="{ active: currentSlide === 1 }"
+      ref="slideMapa"
+    >
+      <div class="mapa-container">
+        
+        <!-- Coluna Esquerda: Título + Texto + Métricas Reais -->
+        <div class="mapa-info-col" ref="mapaInfo">
+          
+          <!-- Header alinhado ao Design System -->
+          <div class="mapa-title-block" ref="mapaHeader">
+            <span class="mapa-sup">Sucesso de</span>
+            <em class="mapa-italic">Desempenho</em>
+          </div>
+
+          <p class="mapa-desc" ref="mapaDesc">
+            O modelo <strong>Taurun T50-PRO sem encaixes</strong> é um sucesso de desempenho e já tem sido adquirido por centenas de academias no Brasil.
+          </p>
+
+          <!-- Quadro Único Grande: 900+ Academias Atendidas crescendo gradativamente -->
+          <div class="mapa-single-stat-card" ref="mapaStatsGrid">
+            <div class="mapa-big-number-wrap">
+              <span class="mapa-big-number" ref="gymCountEl">0</span>
+              <span class="mapa-big-plus">+</span>
+            </div>
+            <span class="mapa-big-label">Academias Atendidas no Brasil</span>
+          </div>
+
+        </div>
+
+        <!-- Coluna Direita: Mapa Físico e Oficial do Brasil com Fronteiras Estaduais -->
+        <div class="mapa-svg-col" ref="mapaSvgCol">
+          <div class="mapa-svg-wrapper">
+            
+            <!-- Linha de Varredura Laser (Scanner Line) -->
+            <div class="mapa-scanner-line" ref="scannerLine" />
+
+            <!-- Imagem Vetorial Oficial dos Estados do Brasil (com contorno de alta fidelidade) -->
+            <img src="/brazil.svg" alt="Mapa de Estados do Brasil" class="mapa-br-svg-img" />
+
+            <!-- Camada SVG de Conexões e Nós de Academias Sincronizados com o Mapa -->
+            <svg
+              class="mapa-overlay-svg"
+              viewBox="0 0 100 100"
+              preserveAspectRatio="xMidYMid meet"
+              ref="mapaSvg"
+            >
+              <defs>
+                <radialGradient id="brCenterGlow" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stop-color="#ffffff" stop-opacity="0.12" />
+                  <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+                </radialGradient>
+              </defs>
+
+              <rect width="100" height="100" fill="url(#brCenterGlow)" />
+
+              <!-- Conexões de Rede Inter-capitais -->
+              <g class="mapa-net-lines">
+                <line
+                  v-for="(line, idx) in networkConnections"
+                  :key="idx"
+                  :x1="line.x1"
+                  :y1="line.y1"
+                  :x2="line.x2"
+                  :y2="line.y2"
+                  class="mapa-net-line"
+                  ref="netLineEls"
+                />
+              </g>
+
+              <!-- Nós de Academias (Preenchidos Animadamente ao Longo de 10s) -->
+              <g class="mapa-nodes-group">
+                <g
+                  v-for="(node, index) in mapNodes"
+                  :key="index"
+                  class="mapa-node-group"
+                  ref="mapNodeEls"
+                >
+                  <!-- Pulso Ripple Animado -->
+                  <circle
+                    :cx="node.x"
+                    :cy="node.y"
+                    r="1.8"
+                    class="node-pulse-ring"
+                  />
+
+                  <!-- Halo Monocromático de Alto Contraste -->
+                  <circle
+                    :cx="node.x"
+                    :cy="node.y"
+                    :r="node.size + 0.3"
+                    fill="rgba(255,255,255,0.3)"
+                  />
+
+                  <!-- Ponto Central Relevante (Branco Puro) -->
+                  <circle
+                    :cx="node.x"
+                    :cy="node.y"
+                    :r="node.size"
+                    fill="#ffffff"
+                    class="node-core"
+                  />
+                </g>
+              </g>
+
+              <!-- Labels de Principais Hubs Nacionais -->
+              <g class="mapa-hubs-labels">
+                <g v-for="hub in hubLabels" :key="hub.name" class="mapa-hub-item" :transform="`translate(${hub.x}, ${hub.y})`">
+                  <circle cx="0" cy="0" r="0.6" fill="#ffffff" />
+                  <text
+                    :x="hub.dx"
+                    :y="hub.dy"
+                    fill="rgba(255,255,255,0.85)"
+                    font-size="2"
+                    font-family="Geist, sans-serif"
+                    font-weight="700"
+                    letter-spacing="0.05em"
+                  >
+                    {{ hub.name }}
+                  </text>
+                </g>
+              </g>
+            </svg>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         SLIDE 03 — A Solução: Estrutura T50-PRO (Tecnologia de Absorção Híbrida)
+    ════════════════════════════════════════════ -->
+    <section
+      class="slide slide-camadas"
+      :class="{ active: currentSlide === 2 }"
+      ref="slideCamadas"
+    >
+      <div class="camadas-grid-container">
+        
+        <!-- Coluna Esquerda: Palco 3D da Estrutura de Camadas com Linhas Brancas Animadas -->
+        <div class="camadas-stage-col">
+          <div
+            class="camadas-stage"
+            ref="camadasStage"
+            @mousemove="handleMouseMoveStage"
+            @mouseleave="handleMouseLeaveStage"
+          >
+            <!-- Imagem 3D das Camadas do Tatame T50-PRO (Fundo 100% Transparente) -->
+            <img
+              src="/camadas/t50-pro-camadas.png"
+              alt="Camadas Tatame Taurun T50-PRO"
+              class="camadas-render-img"
+              ref="camadasImg"
+            />
+
+            <!-- SVG Overlay com Linhas Brancas Animadas Conectando aos Rótulos Externos -->
+            <svg class="camadas-lines-svg" viewBox="0 0 1000 600" preserveAspectRatio="xMidYMid meet">
+              <!-- Camada 01: Lona Hexafibra (Topo -> Fora à Esquerda) -->
+              <g class="svg-group-c1">
+                <circle cx="450" cy="160" r="4" class="svg-dot" />
+                <circle cx="450" cy="160" r="10" class="svg-dot-pulse" />
+                <polyline points="450,160 260,60 40,60" class="svg-line svg-line-c1" ref="svgLineC1" />
+              </g>
+
+              <!-- Camada 02: Espuma de Alto Retorno (Meio -> Topo Direito onde marcado em vermelho) -->
+              <g class="svg-group-c2">
+                <circle cx="660" cy="310" r="4" class="svg-dot" />
+                <circle cx="660" cy="310" r="10" class="svg-dot-pulse" />
+                <polyline points="660,310 760,110 880,50" class="svg-line svg-line-c2" ref="svgLineC2" />
+              </g>
+
+              <!-- Camada 03 Base: Granulado TS40 (Base -> Fora à Esquerda) -->
+              <g class="svg-group-c3">
+                <circle cx="340" cy="440" r="4" class="svg-dot" />
+                <circle cx="340" cy="440" r="10" class="svg-dot-pulse" />
+                <polyline points="340,440 200,520 40,520" class="svg-line svg-line-c3" ref="svgLineC3" />
+              </g>
+            </svg>
+
+            <!-- Callout Camada 01: Lona Hexafibra -->
+            <div class="camadas-callout callout-c1" ref="contentC1">
+              <div class="callout-box">
+                <div class="callout-header-brand">
+                  <span class="callout-badge">CAMADA 01</span>
+                  <img src="/camadas/hexafibra-logo.png" alt="Logo Hexafibra" class="callout-hexafibra-logo" />
+                </div>
+                <span class="callout-title">Lona Hexafibra</span>
+                <span class="callout-tag">Textura exclusiva e máxima durabilidade</span>
+              </div>
+            </div>
+
+            <!-- Callout Camada 02: Espuma de Alto Retorno -->
+            <div class="camadas-callout callout-c2" ref="contentC2">
+              <div class="callout-box">
+                <span class="callout-badge">CAMADA 02</span>
+                <span class="callout-title">Espuma de alto retorno</span>
+                <span class="callout-tag">Recuperação rápida e amortecimento</span>
+              </div>
+            </div>
+
+            <!-- Callout Camada 03: Granulado TS40 -->
+            <div class="camadas-callout callout-c3" ref="contentC3">
+              <div class="callout-box">
+                <span class="callout-badge">CAMADA 03 BASE</span>
+                <span class="callout-title">Granulado TS40</span>
+                <span class="callout-tag">Base de alta densidade e absorção</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Coluna Direita: Texto Alinhado ao Exemplo com Ênfase em Absorção Híbrida -->
+        <div class="camadas-info-col" ref="camadasInfoCol">
+          <div class="camadas-title-block">
+            <span class="camadas-sup-label">MODELO DE</span>
+            <h2 class="camadas-title-italic">Tatame Escolhido</h2>
+          </div>
+
+          <div class="camadas-logo-brand">
+            <img src="/camadas/t50-pro-logo.png" alt="T50-PRO Logo" class="t50pro-logo-img" />
+          </div>
+
+          <p class="camadas-text-desc">
+            O modelo de tatame <strong>mais premium do mercado</strong> e o único com tecnologia de 
+            <span class="highlight-absorcao-hibida">ABSORÇÃO HÍBRIDA</span>.
+          </p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         SLIDE 04 — Acabamentos em Alto Padrão (Foto Quina Grande + Foto Vertical)
+    ════════════════════════════════════════════ -->
+    <section
+      class="slide slide-acabamentos"
+      :class="{ active: currentSlide === 3 }"
+      ref="slideAcabamentos"
+    >
+      <div class="acab-container">
+        
+        <!-- Coluna Esquerda: Texto + Foto da Quina Grande + Instruções -->
+        <div class="acab-info-col">
+          <div class="acab-title-block" ref="acabHeader">
+            <span class="acab-sup">DETALHES QUE FAZEM A DIFERENÇA</span>
+            <h2 class="acab-title-italic">Acabamentos em Alto Padrão</h2>
+          </div>
+
+          <p class="acab-desc" ref="acabDesc">
+            O <strong>T50-PRO</strong> usa acabamentos nas quinas e nas laterais que proporcionam um aspecto altamente profissional, durabilidade extrema e segurança total para o seu tatame.
+          </p>
+
+          <!-- Lista de Instruções / Diferenciais -->
+          <div class="acab-features-list">
+            <div class="acab-feature-item">
+              <span class="acab-feature-icon">✓</span>
+              <div class="acab-feature-text">
+                <strong>Acabamento profissional — Taurun Mat Corner</strong>
+                <span>Encaixe anatômico de alta densidade com logo Taurun gravado em relevo.</span>
+              </div>
+            </div>
+
+            <div class="acab-feature-item">
+              <span class="acab-feature-icon">✓</span>
+              <div class="acab-feature-text">
+                <strong>Tatame com Cantoneira Taurun T50-PRO</strong>
+                <span>Proteção lateral contínua com alinhamento perfeito sem pontas expostas.</span>
+              </div>
+            </div>
+
+            <div class="acab-feature-item">
+              <span class="acab-feature-icon">✓</span>
+              <div class="acab-feature-text">
+                <strong>Estética Impecável de Fábrica</strong>
+                <span>Valorização visual instantânea do espaço da academia.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Coluna Direita: Imagem Vertical sem a pílula/badge -->
+        <div class="acab-vert-col">
+          <div class="acab-vert-frame" ref="acabVertFrame">
+            <img
+              src="/tatame-com-cantoneira.png"
+              alt="Tatame com Cantoneira Taurun T50-PRO"
+              class="acab-vert-img"
+            />
+            
+            <div class="vert-frame-glow" />
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         SLIDE 05 — A Superfície Perfeita
+    ════════════════════════════════════════════ -->
+    <section
+      class="slide slide-02"
+      :class="{ active: currentSlide === 4 }"
+      ref="slide02"
+    >
+      <!-- Coluna de texto — 45% -->
+      <div class="s2-text" ref="s2Text">
+        <!-- Título -->
+        <div class="s2-title-block" ref="s2TitleBlock">
+          <span class="s2-sup">A Superfície</span>
+          <em class="s2-italic">Perfeita</em>
+        </div>
+
+        <!-- Conceito -->
+        <div class="s2-concept" ref="s2Concept">
+          <p class="s2-concept-lead">O conceito central do T50-PRO é o</p>
+          <strong class="s2-concept-key">TATAME UNIFICADO</strong>
+          <p class="s2-concept-sub">Uma superfície. Sem divisões, fitas ou velcros.</p>
+        </div>
+
+        <!-- 3 tópicos com linhas de annotation que cruzam até a imagem -->
+        <ul class="s2-topics">
+          <li class="s2-topic" ref="topic1">
+            <div class="s2-topic-text">
+              <span class="s2-bullet">01</span>
+              <p><strong>Tecnologia exclusiva</strong> — a única superfície feita exclusivamente para artes marciais.</p>
+            </div>
+            <!-- Linha que parte daqui e vai até a imagem -->
+            <div class="s2-line-wrap">
+              <div class="s2-line" ref="line1" />
+            </div>
+          </li>
+
+          <li class="s2-topic" ref="topic2">
+            <div class="s2-topic-text">
+              <span class="s2-bullet">02</span>
+              <p><strong>Aderência sem agressão</strong> — textura equilibrada que protege a pele.</p>
+            </div>
+            <div class="s2-line-wrap">
+              <div class="s2-line" ref="line2" />
+            </div>
+          </li>
+
+          <li class="s2-topic" ref="topic3">
+            <div class="s2-topic-text">
+              <span class="s2-bullet">03</span>
+              <p><strong>Não escorrega</strong> — devido à textura em alto-relevo.</p>
+            </div>
+            <div class="s2-line-wrap">
+              <div class="s2-line" ref="line3" />
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Coluna de imagem — 55% full-bleed -->
+      <div class="s2-image-col">
+        <div class="s2-image-frame" ref="s2ImageFrame">
+          <img
+            src="/hexafibra.jpg"
+            alt="Textura T50-PRO Taurun"
+            class="s2-hexaimg"
+            ref="s2HexaImg"
+          />
+          <div class="s2-image-overlay" />
+          <div class="s2-image-vignette" />
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         SLIDE 06 — Benefícios Chave & Vantagens Competitivas
+    ════════════════════════════════════════════ -->
+    <section
+      class="slide slide-beneficios"
+      :class="{ active: currentSlide === 5 }"
+      ref="slideBeneficios"
+    >
+      <div class="ben-container">
+        
+        <div class="ben-header" ref="benHeader">
+          <span class="ben-eyebrow">VANTAGENS COMPETITIVAS</span>
+          <h2 class="ben-title">Benefícios Chave do T50-PRO</h2>
+        </div>
+
+        <div class="ben-grid" ref="benGrid">
+          <!-- Card 1: Impermeável -->
+          <div class="ben-card">
+            <div class="ben-icon-box">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 14h16" />
+                <path d="M7 14l-2 5" />
+                <path d="M17 14l2 5" />
+                <path d="M12 4v10" />
+                <path d="M8 8l4-4 4 4" />
+              </svg>
+            </div>
+            <p class="ben-card-text">
+              Tatame impermeável e de fácil higienização
+            </p>
+          </div>
+
+          <!-- Card 2: Sem Encaixes -->
+          <div class="ben-card">
+            <div class="ben-icon-box">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="5" width="18" height="14" rx="2" />
+                <path d="M7 10l3 3 7-7" />
+              </svg>
+            </div>
+            <p class="ben-card-text">
+              Totalmente sem encaixes e frestas
+            </p>
+          </div>
+
+          <!-- Card 3: Acabamento Profissional -->
+          <div class="ben-card">
+            <div class="ben-icon-box">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              </svg>
+            </div>
+            <p class="ben-card-text">
+              Acabamentos de alto padrão e completamente profissionais
+            </p>
+          </div>
+
+          <!-- Card 4: Sem Mau Cheiro -->
+          <div class="ben-card">
+            <div class="ben-icon-box">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10" />
+                <path d="M9 12l2 2 4-4" />
+              </svg>
+            </div>
+            <p class="ben-card-text">
+              Sem problemas com o mau cheiro
+            </p>
+          </div>
+
+          <!-- Card 5: Conversão de Clientes -->
+          <div class="ben-card">
+            <div class="ben-icon-box">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z" />
+                <path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-3.05 11a22.35 22.35 0 0 1-3.95 2z" />
+                <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0" />
+                <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5" />
+              </svg>
+            </div>
+            <p class="ben-card-text">
+              Maior chance de conversão de clientes
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         SLIDE 07 — Etapas do Projeto
+    ════════════════════════════════════════════ -->
+    <section
+      class="slide slide-04"
+      :class="{ active: currentSlide === 6 }"
+      ref="slide04"
+    >
+      <div class="s4-container">
+        <div class="s4-header" ref="s4Header">
+          <span class="s4-eyebrow">Etapas do Projeto Após</span>
+          <h2 class="s4-title">Fechamento do Contrato</h2>
+        </div>
+
+        <div class="s4-cards-wrapper" ref="s4CardsWrap">
+          <div
+            v-for="(etapa, index) in etapas"
+            :key="index"
+            class="s4-card"
+            :class="{ 'is-active': activeEtapa === index }"
+            @click="activeEtapa = index"
+          >
+            <div class="s4-card-header">
+              <span class="s4-number">{{ etapa.number }}</span>
+              <div class="s4-icon-box">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="s4-icon">
+                  <path :d="etapa.iconPath" />
+                </svg>
+              </div>
+            </div>
+
+            <div class="s4-card-body">
+              <h3 class="s4-card-title">{{ etapa.title }}</h3>
+              <p class="s4-card-desc">{{ etapa.description }}</p>
+            </div>
+
+            <div class="s4-collapsed-label">
+              <span>{{ etapa.title }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         SLIDE 08 — Quem São Nossos Clientes?
+    ════════════════════════════════════════════ -->
+    <section
+      class="slide slide-05"
+      :class="{ active: currentSlide === 7 }"
+      ref="slide05"
+    >
+      <div class="s5-container">
+        <div class="s5-header" ref="s5Header">
+          <span class="s5-eyebrow">QUEM SÃO OS</span>
+          <h2 class="s5-title">Nossos Clientes?</h2>
+        </div>
+
+        <div class="s5-grid" ref="s5Grid">
+          <div
+            v-for="(atleta, index) in atletas"
+            :key="index"
+            class="s5-athlete-item"
+            :class="{ 'is-revealed': atleta.revealed }"
+            @click="atleta.revealed = !atleta.revealed"
+          >
+            <div class="s5-avatar-wrap">
+              <div class="s5-unrevealed-overlay">
+                <span class="s5-mystery-mark">?</span>
+                <span class="s5-touch-hint">clique</span>
+              </div>
+              <img
+                :src="atleta.image"
+                :alt="atleta.name"
+                class="s5-avatar-img"
+              />
+            </div>
+
+            <div class="s5-name-wrap">
+              <span class="s5-name">{{ atleta.name }}</span>
+            </div>
+          </div>
+        </div>
+
+        <button
+          class="s5-reveal-all-btn"
+          @click="toggleRevealAll"
+        >
+          {{ allRevealed ? 'Ocultar Todos' : 'Revelar Todos' }}
+        </button>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         SLIDE 09 — Orçamento & Investimento Comercial (T50-PRO)
+    ════════════════════════════════════════════ -->
+    <section
+      class="slide slide-06"
+      :class="{ active: currentSlide === 8 }"
+      ref="slide06"
+    >
+      <div class="s6-container">
+        <!-- Header -->
+        <div class="s6-header" ref="s6Header">
+          <span class="s6-eyebrow">RESUMO DO ORÇAMENTO T50-PRO</span>
+          <h2 class="s6-title">Investimento & Proposta</h2>
+        </div>
+
+        <!-- Card Principal da Proposta -->
+        <div class="s6-proposal-card" ref="s6Card">
+
+          <!-- Metadados da Cotação (Cliente & Consultor) -->
+          <div class="s6-meta-bar">
+            <div class="s6-meta-item">
+              <span class="s6-meta-label">CLIENTE / ACADEMIA</span>
+              <strong class="s6-meta-value">{{ quote.clientName.value || 'Academia Parceira' }}</strong>
+            </div>
+            <div v-if="quote.clientPhone.value" class="s6-meta-item">
+              <span class="s6-meta-label">CONTATO</span>
+              <span class="s6-meta-value">{{ quote.clientPhone.value }}</span>
+            </div>
+            <div class="s6-meta-item s6-meta-item--seller">
+              <span class="s6-meta-label">CONSULTOR TAURUN</span>
+              <span class="s6-meta-value">{{ quote.selectedSeller.value.name }}</span>
+            </div>
+            <!-- Badge Indicador de Tabela / Condição Especial -->
+            <div class="s6-meta-item s6-meta-item--status">
+              <span class="s6-status-badge" :class="{ 'is-special': isDiscountApplied }">
+                {{ isDiscountApplied ? '✓ Tabela Promocional do Consultor' : 'Tabela Oficial de Fábrica' }}
+              </span>
+            </div>
+          </div>
+
+          <!-- Tabela de Produtos / Itens Cotados -->
+          <div class="s6-items-table">
+
+            <!-- Item 1: Tatame T50-PRO -->
+            <div class="s6-item-row">
+              <div class="s6-item-info">
+                <span class="s6-item-badge">Produto Principal</span>
+                <h4 class="s6-item-name">Tatame Taurun T50-PRO</h4>
+                <p class="s6-item-desc">{{ quote.quantityM2.value }}m² de superfície unificada de alta performance.</p>
+              </div>
+              <div class="s6-item-specs">
+                <div class="s6-spec">
+                  <span class="s6-spec-label">Metragem</span>
+                  <span class="s6-spec-val">{{ quote.quantityM2.value }} m²</span>
+                </div>
+                <div class="s6-spec">
+                  <span class="s6-spec-label">Valor / m²</span>
+                  <span class="s6-spec-val">{{ quote.formatCurrency(displayPricePerM2) }}</span>
+                </div>
+                <div class="s6-spec s6-spec--subtotal">
+                  <span class="s6-spec-label">Subtotal</span>
+                  <span class="s6-spec-val">{{ quote.formatCurrency(displayTotalTatame) }}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Item 2: Vinil Click (se ativado pelo vendedor) -->
+            <div v-if="quote.hasVinilClick.value" class="s6-item-row s6-item-row--optional">
+              <div class="s6-item-info">
+                <span class="s6-item-badge s6-item-badge--opt">Adicional</span>
+                <h4 class="s6-item-name">Proteções de parede Vinil Click</h4>
+                <p class="s6-item-desc">Sistema de proteção lateral de parede com encaixe Vinil Click.</p>
+              </div>
+              <div class="s6-item-specs">
+                <div class="s6-spec">
+                  <span class="s6-spec-label">Quantidade</span>
+                  <span class="s6-spec-val">{{ quote.vinilQuantity.value }} m</span>
+                </div>
+                <div class="s6-spec">
+                  <span class="s6-spec-label">Valor / m</span>
+                  <span class="s6-spec-val">{{ quote.formatCurrency(displayVinilUnitPrice) }}</span>
+                </div>
+                <div class="s6-spec s6-spec--subtotal">
+                  <span class="s6-spec-label">Subtotal</span>
+                  <span class="s6-spec-val">{{ quote.formatCurrency(displayTotalVinil) }}</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Total Geral e Botão Interativo de Condição Especial -->
+          <div class="s6-total-bar">
+            <div class="s6-total-block">
+              <span class="s6-total-label">
+                {{ isDiscountApplied ? 'INVESTIMENTO FINAL (CONDIÇÃO ESPECIAL)' : 'VALOR DE TABELA OFICIAL' }}
+              </span>
+
+              <!-- Preço original riscado + preço promocional real -->
+              <div class="s6-total-amount-wrap">
+                <span v-if="isDiscountApplied" class="s6-strikethrough-amount">
+                  {{ quote.formatCurrency(inflatedGrandTotal) }}
+                </span>
+                <div class="s6-total-amount" :class="{ 'is-special': isDiscountApplied }">
+                  {{ quote.formatCurrency(displayGrandTotal) }}
+                </div>
+              </div>
+            </div>
+
+            <!-- Botão Interativo para o Vendedor Alternar entre Tabela Inflada e Preço Real -->
+            <button
+              class="s6-discount-toggle-btn"
+              :class="{ 'is-applied': isDiscountApplied }"
+              @click="isDiscountApplied = !isDiscountApplied"
+            >
+              <span v-if="!isDiscountApplied" class="s6-toggle-content">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="s6-toggle-icon">
+                  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+                </svg>
+                <span>Aplicar Condição Especial</span>
+              </span>
+              <span v-else class="s6-toggle-content">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="s6-toggle-icon">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                <span>Condição Especial Aplicada</span>
+              </span>
+            </button>
+          </div>
+
+          <!-- Benefícios e Garantia -->
+          <div class="s6-perks">
+            <span class="s6-perk">✓ Fábrica própria com entrega garantida</span>
+            <span class="s6-perk">✓ Projeto e instalação sob medida inclusos</span>
+            <span class="s6-perk">✓ Garantia oficial Taurun T50-PRO de alta performance</span>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref, computed, onMounted, onBeforeUnmount, nextTick } from 'vue'
+import { useRouter } from 'vue-router'
+import gsap from 'gsap'
+import * as THREE from 'three'
+import { useQuote } from '~/composables/useQuote'
+
+const router = useRouter()
+
+function exitPresentation() {
+  router.push('/?tab=list')
+}
+
+useHead({
+  title: 'Taurun T50-PRO — Apresentação Comercial',
+  meta: [{ name: 'description', content: 'Apresentação comercial do Tatame Taurun T50-PRO sem encaixes.' }],
+})
+
+const quote = useQuote()
+
+// ── Slides & navegação ────────────────────────────────────────
+const slides = [0, 1, 2, 3, 4, 5, 6, 7, 8]
+const currentSlide = ref(0)
+
+function nextSlide() {
+  if (currentSlide.value < slides.length - 1) goTo(currentSlide.value + 1)
+}
+function prevSlide() {
+  if (currentSlide.value > 0) goTo(currentSlide.value - 1)
+}
+function goTo(i: number) {
+  if (i === currentSlide.value) return
+  currentSlide.value = i
+  if (i === 0) animateSlide01()
+  if (i === 1) animateSlideMapa()
+  if (i === 2) animateSlideCamadas()
+  if (i === 3) animateSlideAcabamentos()
+  if (i === 4) animateSlide02()
+  if (i === 5) animateSlideBeneficios()
+  if (i === 6) animateSlide04()
+  if (i === 7) animateSlide05()
+  if (i === 8) animateSlide06()
+}
+
+// ── Refs slide 01 ──────────────────────────────────────────────
+const rootEl        = ref<HTMLElement>()
+const lineTop       = ref<HTMLElement>()
+const lineBottom    = ref<HTMLElement>()
+const logoContainer = ref<HTMLElement>()
+const logoImg       = ref<HTMLElement>()
+const taglineEl     = ref<HTMLElement>()
+
+// ── Refs & Dados do SLIDE 02 (Mapa do Brasil Tech 10s) ─────────
+const slideMapa     = ref<HTMLElement>()
+const mapaHeader    = ref<HTMLElement>()
+const mapaDesc      = ref<HTMLElement>()
+const mapaInfo      = ref<HTMLElement>()
+const mapaStatsGrid = ref<HTMLElement>()
+const mapaSvgCol    = ref<HTMLElement>()
+const mapaSvg       = ref<SVGElement>()
+const scannerLine   = ref<HTMLElement>()
+const gymCountEl    = ref<HTMLElement>()
+
+const animationProgress = ref(0)
+
+const mapNodeEls  = ref<SVGElement[]>([])
+const netLineEls  = ref<SVGLineElement[]>([])
+
+// Coordenadas Reais de Academias no Brasil em viewBox 0..100 (alinhadas ao Mapa Oficial)
+const mapNodes = [
+  // SUDESTE (SP, RJ, MG, ES)
+  { x: 61, y: 69, size: 1.0 }, // SP Capital
+  { x: 59, y: 67, size: 0.7 }, // Campinas
+  { x: 62, y: 71, size: 0.7 }, // Santos
+  { x: 57, y: 65, size: 0.7 }, // Ribeirão Preto
+  { x: 55, y: 67, size: 0.6 }, // Bauru
+  { x: 63, y: 68, size: 0.6 }, // SJC
+  { x: 68, y: 68, size: 1.0 }, // RJ Capital
+  { x: 69, y: 68, size: 0.7 }, // Niterói
+  { x: 66, y: 67, size: 0.6 }, // Volta Redonda
+  { x: 71, y: 66, size: 0.6 }, // Macaé
+  { x: 64, y: 61, size: 0.9 }, // BH
+  { x: 56, y: 60, size: 0.7 }, // Uberlândia
+  { x: 58, y: 61, size: 0.6 }, // Uberaba
+  { x: 66, y: 65, size: 0.7 }, // Juiz de Fora
+  { x: 66, y: 56, size: 0.6 }, // Montes Claros
+  { x: 73, y: 62, size: 0.8 }, // Vitória
+  { x: 72, y: 63, size: 0.6 }, // Vila Velha
+
+  // SUL (PR, SC, RS)
+  { x: 55, y: 75, size: 0.9 }, // Curitiba
+  { x: 52, y: 72, size: 0.7 }, // Londrina
+  { x: 50, y: 72, size: 0.7 }, // Maringá
+  { x: 47, y: 76, size: 0.6 }, // Foz do Iguaçu
+  { x: 57, y: 80, size: 0.9 }, // Florianópolis
+  { x: 57, y: 77, size: 0.7 }, // Joinville
+  { x: 56, y: 79, size: 0.6 }, // Blumenau
+  { x: 51, y: 79, size: 0.6 }, // Chapecó
+  { x: 53, y: 87, size: 0.9 }, // Porto Alegre
+  { x: 53, y: 84, size: 0.7 }, // Caxias do Sul
+  { x: 51, y: 91, size: 0.6 }, // Pelotas
+  { x: 47, y: 86, size: 0.6 }, // Santa Maria
+
+  // CENTRO-OESTE (DF, GO, MT, MS)
+  { x: 56, y: 52, size: 1.0 }, // Brasília
+  { x: 54, y: 54, size: 0.8 }, // Goiânia
+  { x: 55, y: 53, size: 0.6 }, // Anápolis
+  { x: 55, y: 49, size: 0.6 }, // Rio Verde
+  { x: 41, y: 53, size: 0.8 }, // Cuiabá
+  { x: 43, y: 56, size: 0.6 }, // Rondonópolis
+  { x: 39, y: 51, size: 0.6 }, // Sinop
+  { x: 44, y: 64, size: 0.8 }, // Campo Grande
+  { x: 43, y: 67, size: 0.6 }, // Dourados
+
+  // NORDESTE (BA, PE, CE, RN, PB, AL, SE, PI, MA)
+  { x: 79, y: 46, size: 1.0 }, // Salvador
+  { x: 77, y: 45, size: 0.7 }, // Feira de Santana
+  { x: 72, y: 52, size: 0.6 }, // Vitória da Conquista
+  { x: 74, y: 43, size: 0.6 }, // Juazeiro
+  { x: 83, y: 42, size: 0.7 }, // Aracaju
+  { x: 85, y: 39, size: 0.7 }, // Maceió
+  { x: 87, y: 36, size: 1.0 }, // Recife
+  { x: 85, y: 36, size: 0.6 }, // Caruaru
+  { x: 78, y: 38, size: 0.6 }, // Petrolina
+  { x: 88, y: 33, size: 0.7 }, // João Pessoa
+  { x: 86, y: 33, size: 0.6 }, // Campina Grande
+  { x: 88, y: 30, size: 0.8 }, // Natal
+  { x: 81, y: 24, size: 1.0 }, // Fortaleza
+  { x: 79, y: 23, size: 0.6 }, // Sobral
+  { x: 80, y: 30, size: 0.6 }, // Juazeiro do Norte
+  { x: 73, y: 30, size: 0.7 }, // Teresina
+  { x: 74, y: 24, size: 0.6 }, // Parnaíba
+  { x: 69, y: 22, size: 0.8 }, // São Luís
+  { x: 63, y: 31, size: 0.6 }, // Imperatriz
+
+  // NORTE (PA, AM, AP, RR, RO, AC, TO)
+  { x: 59, y: 18, size: 0.9 }, // Belém
+  { x: 45, y: 20, size: 0.6 }, // Santarém
+  { x: 60, y: 28, size: 0.6 }, // Marabá
+  { x: 29, y: 20, size: 0.9 }, // Manaus
+  { x: 37, y: 21, size: 0.6 }, // Parintins
+  { x: 57, y: 12, size: 0.7 }, // Macapá
+  { x: 29, y: 8,  size: 0.7 }, // Boa Vista
+  { x: 25, y: 39, size: 0.7 }, // Porto Velho
+  { x: 29, y: 43, size: 0.6 }, // Ji-Paraná
+  { x: 15, y: 40, size: 0.7 }, // Rio Branco
+  { x: 60, y: 39, size: 0.7 }, // Palmas
+  { x: 60, y: 34, size: 0.6 }, // Araguaína
+
+  // CLUSTERS DE DENSIDADE (São Paulo, Rio, BH, Curitiba, Brasília)
+  { x: 61.5, y: 69.5, size: 0.5 },
+  { x: 60.5, y: 68.8, size: 0.5 },
+  { x: 68.5, y: 68.5, size: 0.5 },
+  { x: 64.5, y: 61.2, size: 0.5 },
+  { x: 55.5, y: 75.3, size: 0.5 },
+  { x: 56.5, y: 52.3, size: 0.5 },
+  { x: 79.5, y: 46.5, size: 0.5 },
+  { x: 87.5, y: 36.5, size: 0.5 },
+  { x: 81.5, y: 24.5, size: 0.5 }
+]
+
+// Linhas de Rede conectando as capitais brasileiras
+const networkConnections = [
+  { x1: 61, y1: 69, x2: 68, y2: 68 }, // SP - RJ
+  { x1: 61, y1: 69, x2: 64, y2: 61 }, // SP - BH
+  { x1: 61, y1: 69, x2: 55, y2: 75 }, // SP - Curitiba
+  { x1: 64, y1: 61, x2: 56, y2: 52 }, // BH - Brasília
+  { x1: 56, y1: 52, x2: 54, y2: 54 }, // Brasília - Goiânia
+  { x1: 55, y1: 75, x2: 57, y2: 80 }, // Curitiba - Floripa
+  { x1: 57, y1: 80, x2: 53, y2: 87 }, // Floripa - POA
+  { x1: 68, y1: 68, x2: 73, y2: 62 }, // RJ - Vitória
+  { x1: 73, y1: 62, x2: 79, y2: 46 }, // Vitória - Salvador
+  { x1: 79, y1: 46, x2: 83, y2: 42 }, // Salvador - Aracaju
+  { x1: 83, y1: 42, x2: 85, y2: 39 }, // Aracaju - Maceió
+  { x1: 85, y1: 39, x2: 87, y2: 36 }, // Maceió - Recife
+  { x1: 87, y1: 36, x2: 88, y2: 33 }, // Recife - João Pessoa
+  { x1: 88, y1: 33, x2: 88, y2: 30 }, // João Pessoa - Natal
+  { x1: 88, y1: 30, x2: 81, y2: 24 }, // Natal - Fortaleza
+  { x1: 81, y1: 24, x2: 73, y2: 30 }, // Fortaleza - Teresina
+  { x1: 73, y1: 30, x2: 69, y2: 22 }, // Teresina - São Luís
+  { x1: 69, y1: 22, x2: 59, y2: 18 }, // São Luís - Belém
+  { x1: 59, y1: 18, x2: 29, y2: 20 }, // Belém - Manaus
+  { x1: 56, y1: 52, x2: 41, y2: 53 }, // Brasília - Cuiabá
+  { x1: 41, y1: 53, x2: 44, y2: 64 }, // Cuiabá - Campo Grande
+  { x1: 56, y1: 52, x2: 60, y2: 39 }, // Brasília - Palmas
+  { x1: 41, y1: 53, x2: 25, y2: 39 }, // Cuiabá - Porto Velho
+  { x1: 25, y1: 39, x2: 15, y2: 40 }  // Porto Velho - Rio Branco
+]
+
+// Labels de Capitais Hubs
+const hubLabels = [
+  { name: 'SÃO PAULO',    x: 61, y: 69, dx: 1.5, dy: 0.8 },
+  { name: 'RIO DE JANEIRO',x: 68, y: 68, dx: 1.5, dy: 0.8 },
+  { name: 'BELO HORIZONTE',x: 64, y: 61, dx: 1.5, dy: -1.2 },
+  { name: 'CURITIBA',     x: 55, y: 75, dx: -10.5, dy: 0.8 },
+  { name: 'PORTO ALEGRE',  x: 53, y: 87, dx: 1.5, dy: 0.8 },
+  { name: 'BRASÍLIA',     x: 56, y: 52, dx: 1.5, dy: -1.2 },
+  { name: 'SALVADOR',     x: 79, y: 46, dx: 1.5, dy: 0.8 },
+  { name: 'RECIFE',       x: 87, y: 36, dx: 1.5, dy: 0.8 },
+  { name: 'FORTALEZA',    x: 81, y: 24, dx: 1.5, dy: -1.2 },
+  { name: 'BELÉM',        x: 59, y: 18, dx: 1.5, dy: -1.2 },
+  { name: 'MANAUS',       x: 29, y: 20, dx: -9.5, dy: 0.8 }
+]
+
+// ── Refs Slide 03 Camadas (T50-PRO Absorção Híbrida) ─────────────────
+const slideCamadas   = ref<HTMLElement>()
+const camadasStage   = ref<HTMLElement>()
+const camadasImg     = ref<HTMLElement>()
+const camadasInfoCol = ref<HTMLElement>()
+
+const svgLineC1 = ref<SVGPolylineElement>()
+const svgLineC2 = ref<SVGPolylineElement>()
+const svgLineC3 = ref<SVGPolylineElement>()
+
+const contentC1 = ref<HTMLElement>()
+const contentC2 = ref<HTMLElement>()
+const contentC3 = ref<HTMLElement>()
+
+function handleMouseMoveStage(e: MouseEvent) {
+  if (!camadasStage.value || !camadasImg.value) return
+  const rect = camadasStage.value.getBoundingClientRect()
+  const x = (e.clientX - rect.left) / rect.width - 0.5
+  const y = (e.clientY - rect.top) / rect.height - 0.5
+
+  gsap.to(camadasImg.value, {
+    rotationY: x * 18,
+    rotationX: -y * 18,
+    x: x * 20,
+    y: y * 20,
+    duration: 0.4,
+    ease: 'power2.out',
+    overwrite: 'auto'
+  })
+}
+
+function handleMouseLeaveStage() {
+  if (!camadasImg.value) return
+  gsap.to(camadasImg.value, {
+    rotationY: 0,
+    rotationX: 0,
+    x: 0,
+    y: 0,
+    duration: 0.8,
+    ease: 'power2.out',
+    overwrite: 'auto'
+  })
+}
+
+// ── Refs Slide 04 (Acabamentos em Alto Padrão) ─────────────────────
+const slideAcabamentos = ref<HTMLElement>()
+const acabHeader       = ref<HTMLElement>()
+const acabDesc         = ref<HTMLElement>()
+const acabVertFrame    = ref<HTMLElement>()
+
+function animateSlideAcabamentos() {
+  const tl = gsap.timeline({ defaults: { ease: 'expo.out' } })
+  gsap.set(acabHeader.value,    { autoAlpha: 0, y: -20 })
+  gsap.set(acabDesc.value,      { autoAlpha: 0, y: 15 })
+  gsap.set(acabVertFrame.value, { autoAlpha: 0, x: 30, scale: 0.96 })
+
+  tl
+    .to(acabHeader.value,    { autoAlpha: 1, y: 0, duration: 0.7 }, 0)
+    .to(acabDesc.value,      { autoAlpha: 1, y: 0, duration: 0.7 }, 0.15)
+    .to(acabVertFrame.value, { autoAlpha: 1, x: 0, scale: 1, duration: 0.9 }, 0.3)
+}
+
+// ── Refs Slide 05 (A Superfície Perfeita) ──────────────────────
+const slide02      = ref<HTMLElement>()
+const s2Text       = ref<HTMLElement>()
+const s2TitleBlock = ref<HTMLElement>()
+const s2Concept    = ref<HTMLElement>()
+const topic1       = ref<HTMLElement>()
+const topic2       = ref<HTMLElement>()
+const topic3       = ref<HTMLElement>()
+const line1        = ref<HTMLElement>()
+const line2        = ref<HTMLElement>()
+const line3        = ref<HTMLElement>()
+const s2ImageFrame = ref<HTMLElement>()
+const s2HexaImg    = ref<HTMLElement>()
+
+// ── Refs Slide 06 (Benefícios Chave) ──────────────────────────
+const slideBeneficios = ref<HTMLElement>()
+const benHeader       = ref<HTMLElement>()
+const benGrid         = ref<HTMLElement>()
+
+function animateSlideBeneficios() {
+  const tl = gsap.timeline({ defaults: { ease: 'expo.out' } })
+
+  gsap.set(benHeader.value, { autoAlpha: 0, y: -25 })
+  if (benGrid.value?.children) {
+    gsap.set(benGrid.value.children, { autoAlpha: 0, scale: 0.88, y: 30 })
+  }
+
+  tl
+    .to(benHeader.value, { autoAlpha: 1, y: 0, duration: 0.8 }, 0)
+    .to(benGrid.value?.children || [], {
+      autoAlpha: 1,
+      scale: 1,
+      y: 0,
+      duration: 0.7,
+      stagger: 0.1,
+    }, 0.2)
+}
+
+// ── Refs Slide 05 (Antes/Depois) ──────────────────────────────
+const s3Compare     = ref<HTMLElement>()
+const s3DepoisWrap  = ref<HTMLElement>()
+const s3Handle      = ref<HTMLElement>()
+const s3LabelAntes  = ref<HTMLElement>()
+const s3LabelDepois = ref<HTMLElement>()
+const s3Right       = ref<HTMLElement>()
+const s3TitleBlock  = ref<HTMLElement>()
+const s3Phrase1     = ref<HTMLElement>()
+const s3Phrase2     = ref<HTMLElement>()
+const s3Phrase3     = ref<HTMLElement>()
+
+// ── Slide 06 refs & data (Etapas) ──────────────────────────────
+const slide04     = ref<HTMLElement>()
+const s4Header    = ref<HTMLElement>()
+const s4CardsWrap = ref<HTMLElement>()
+const activeEtapa = ref(0)
+
+// ── Slide 07 refs & data (Clientes) ────────────────────────────
+const slide05  = ref<HTMLElement>()
+const s5Header = ref<HTMLElement>()
+const s5Grid   = ref<HTMLElement>()
+
+// ── Slide 08 refs (Proposta) ──────────────────────────────────
+const slide06  = ref<HTMLElement>()
+const s6Header = ref<HTMLElement>()
+const s6Card   = ref<HTMLElement>()
+
+// Preço inflado (+35%) & Condição Especial do Vendedor
+const isDiscountApplied = ref(false)
+const INFLATION_FACTOR = 1.35
+
+const displayPricePerM2 = computed(() => {
+  return isDiscountApplied.value
+    ? quote.pricePerM2.value
+    : quote.pricePerM2.value * INFLATION_FACTOR
+})
+
+const displayTotalTatame = computed(() => {
+  return isDiscountApplied.value
+    ? quote.totalTatamePrice.value
+    : quote.totalTatamePrice.value * INFLATION_FACTOR
+})
+
+const displayVinilUnitPrice = computed(() => {
+  return isDiscountApplied.value
+    ? quote.vinilUnitPrice.value
+    : quote.vinilUnitPrice.value * INFLATION_FACTOR
+})
+
+const displayTotalVinil = computed(() => {
+  return isDiscountApplied.value
+    ? quote.totalVinilPrice.value
+    : quote.totalVinilPrice.value * INFLATION_FACTOR
+})
+
+const displayGrandTotal = computed(() => {
+  return isDiscountApplied.value
+    ? quote.grandTotal.value
+    : quote.grandTotal.value * INFLATION_FACTOR
+})
+
+const inflatedGrandTotal = computed(() => {
+  return quote.grandTotal.value * INFLATION_FACTOR
+})
+
+const atletas = ref([
+  { name: 'Cobrinha',          image: '/clientes/images.jpeg',                                                              revealed: false },
+  { name: 'Vagner Rocha',      image: '/clientes/60f8321c159c1.jpeg',                                                      revealed: false },
+  { name: 'Felipe Preguiça',  image: '/clientes/felipe-preguica-analisa-duelo-contra-henrique-ceconi-no-bjj-stars-8-encontro-de-geracoes.jpg', revealed: false },
+  { name: 'Cyborg',            image: '/clientes/Roberto-Cyborg1.jpg',                                                      revealed: false },
+  { name: 'Celsinho Venicius', image: '/clientes/celso-venicius-jiu-jitsu_480x480.webp',                                      revealed: false },
+  { name: 'Isaque Bahiense',   image: '/clientes/IMG_2382.jpeg',                                                          revealed: false },
+  { name: 'Gutemberg',         image: '/clientes/images (1).jpeg',                                                         revealed: false },
+  { name: 'Anderson Muniz',    image: '/clientes/anderson-muniz.webp',                                                     revealed: false },
+  { name: 'Aung',              image: '/clientes/Aung_La_N_Sang-hero-1200x1165-1.jpg',                                     revealed: false },
+  { name: 'Daniel 220v',       image: '/clientes/1_daniel-35975615.jpg',                                                   revealed: false },
+])
+
+const allRevealed = computed(() => atletas.value.every(a => a.revealed))
+
+function toggleRevealAll() {
+  const target = !allRevealed.value
+  atletas.value.forEach(a => { a.revealed = target })
+}
+
+const etapas = [
+  {
+    number: '01',
+    title: 'Projeto',
+    description: 'Disponibilizamos nossa equipe de arquitetos e designer gráficos para desenvolver cada aspecto visual do projeto T50-PRO com projeções 3D.',
+    iconPath: 'M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5',
+  },
+  {
+    number: '02',
+    title: 'Produção',
+    description: 'O tatame T50-PRO é fabricado sob medida na nossa fábrica própria.',
+    iconPath: 'M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83',
+  },
+  {
+    number: '03',
+    title: 'Envio',
+    description: 'Todo material é embalado e enviado via logística especializada.',
+    iconPath: 'M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z M3.27 6.96L12 12.01l8.73-5.05 M12 22.08V12',
+  },
+  {
+    number: '04',
+    title: 'Instalação',
+    description: 'Nossa equipe técnica executa toda a montagem unificada no local.',
+    iconPath: 'M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z',
+  },
+]
+
+// Slider interativo slide 05
+const sliderPos  = ref(50)
+const isDragging = ref(false)
+
+function getPosPct(clientX: number): number {
+  if (!s3Compare.value) return 50
+  const rect = s3Compare.value.getBoundingClientRect()
+  const pct  = ((clientX - rect.left) / rect.width) * 100
+  return Math.min(Math.max(pct, 3), 97)
+}
+
+function startDrag(e: MouseEvent) {
+  isDragging.value = true
+  const onMove = (ev: MouseEvent) => {
+    if (!isDragging.value) return
+    sliderPos.value = getPosPct(ev.clientX)
+  }
+  const onUp = () => {
+    isDragging.value = false
+    window.removeEventListener('mousemove', onMove)
+    window.removeEventListener('mouseup', onUp)
+  }
+  window.addEventListener('mousemove', onMove)
+  window.addEventListener('mouseup', onUp)
+}
+
+function startDragTouch(e: TouchEvent) {
+  isDragging.value = true
+  const onMove = (ev: TouchEvent) => {
+    if (!isDragging.value) return
+    sliderPos.value = getPosPct(ev.touches[0].clientX)
+  }
+  const onEnd = () => {
+    isDragging.value = false
+    window.removeEventListener('touchmove', onMove)
+    window.removeEventListener('touchend', onEnd)
+  }
+  window.addEventListener('touchmove', onMove, { passive: true })
+  window.addEventListener('touchend', onEnd)
+}
+
+// ── Partículas slide 01 ───────────────────────────────────────
+function particleStyle(n: number) {
+  const seed = n * 137.508
+  return {
+    left:  `${(seed * 0.618) % 100}%`,
+    top:   `${(seed * 0.382) % 100}%`,
+    width: `${2 + (n % 3)}px`,
+    height:`${2 + (n % 3)}px`,
+    animationDelay:    `${(n * 0.4) % 5}s`,
+    animationDuration: `${6 + (n % 4)}s`,
+  }
+}
+
+// ── GSAP — Slide 01 logo reveal ───────────────────────────────
+function animateSlide01() {
+  const tl = gsap.timeline()
+  gsap.set(lineTop.value,       { scaleX: 0, transformOrigin: 'left center' })
+  gsap.set(lineBottom.value,    { scaleX: 0, transformOrigin: 'right center' })
+  gsap.set(logoContainer.value, { scale: 0.8, autoAlpha: 0 })
+  gsap.set(taglineEl.value,     { autoAlpha: 0, y: 10 })
+
+  tl
+    .to(lineTop.value,       { scaleX: 1, duration: 0.8, ease: 'expo.out' }, 0.2)
+    .to(lineBottom.value,    { scaleX: 1, duration: 0.8, ease: 'expo.out' }, 0.4)
+    .to(logoContainer.value, { scale: 1, autoAlpha: 1, duration: 0.9, ease: 'expo.out' }, 0.5)
+    .to(taglineEl.value,     { autoAlpha: 1, y: 0, duration: 0.5, ease: 'power2.out' }, 1.1)
+}
+
+// ── GSAP — Slide 02 — MAPA DO BRASIL ANIMADO EM 10 SEGUNDOS ───
+let mapTimeline: gsap.core.Timeline | null = null
+
+function animateSlideMapa() {
+  if (mapTimeline) mapTimeline.kill()
+  
+  const tl = gsap.timeline()
+  mapTimeline = tl
+
+  animationProgress.value = 0
+
+  // Resets iniciais
+  gsap.set(mapaHeader.value,    { autoAlpha: 0, y: -20 })
+  gsap.set(mapaDesc.value,      { autoAlpha: 0, y: 15 })
+  gsap.set(mapaStatsGrid.value, { autoAlpha: 0, y: 20 })
+  gsap.set(mapaSvgCol.value,    { autoAlpha: 0, scale: 0.94 })
+
+  if (scannerLine.value) {
+    gsap.set(scannerLine.value, { top: '0%', autoAlpha: 0.8 })
+  }
+
+  if (mapNodeEls.value?.length) {
+    gsap.set(mapNodeEls.value, { autoAlpha: 0, scale: 0, transformOrigin: 'center center' })
+  }
+  if (netLineEls.value?.length) {
+    gsap.set(netLineEls.value, { autoAlpha: 0, strokeDasharray: 50, strokeDashoffset: 50 })
+  }
+
+  const counterObj = { count: 0, progress: 0 }
+  if (gymCountEl.value) gymCountEl.value.innerText = '0'
+
+  // 1. Entradas dos textos (0s - 0.8s)
+  tl
+    .to(mapaHeader.value,    { autoAlpha: 1, y: 0, duration: 0.7, ease: 'expo.out' }, 0)
+    .to(mapaDesc.value,      { autoAlpha: 1, y: 0, duration: 0.7, ease: 'expo.out' }, 0.15)
+    .to(mapaStatsGrid.value, { autoAlpha: 1, y: 0, duration: 0.7, ease: 'expo.out' }, 0.3)
+    .to(mapaSvgCol.value,    { autoAlpha: 1, scale: 1, duration: 0.9, ease: 'expo.out' }, 0.2)
+
+  // 2. Animação da Scanner Line varrendo o Brasil (0s - 10s)
+  if (scannerLine.value) {
+    tl.to(scannerLine.value, {
+      top: '100%',
+      duration: 9.8,
+      ease: 'power1.inOut'
+    }, 0.2)
+  }
+
+  // 3. Preenchimento gradual e constante dos pontos pelo mapa do Brasil (EXATAMENTE 10s)
+  if (mapNodeEls.value?.length) {
+    tl.to(mapNodeEls.value, {
+      autoAlpha: 1,
+      scale: 1,
+      duration: 0.5,
+      ease: 'back.out(2)',
+      stagger: {
+        amount: 9.2,
+        from: 'random'
+      }
+    }, 0.5)
+  }
+
+  // 4. Linhas de conexão
+  if (netLineEls.value?.length) {
+    tl.to(netLineEls.value, {
+      autoAlpha: 0.5,
+      strokeDashoffset: 0,
+      duration: 0.8,
+      ease: 'power2.out',
+      stagger: {
+        amount: 8.5,
+        from: 'start'
+      }
+    }, 0.8)
+  }
+
+  // 5. Incremento numérico contínuo do contador de 0 a 900+ (0.2s - 10s)
+  tl.to(counterObj, {
+    count: 900,
+    progress: 100,
+    duration: 9.8,
+    ease: 'power2.out',
+    onUpdate: () => {
+      if (gymCountEl.value) {
+        gymCountEl.value.innerText = Math.floor(counterObj.count).toString()
+      }
+      animationProgress.value = Math.floor(counterObj.progress)
+    }
+  }, 0.2)
+}
+
+// ── GSAP — Slide Camadas (Estrutura T50-PRO Absorção Híbrida) ────────
+function animateSlideCamadas() {
+  const tl = gsap.timeline({ defaults: { ease: 'expo.out' } })
+
+  const setupLine = (el?: SVGPolylineElement) => {
+    if (!el) return
+    const len = el.getTotalLength ? el.getTotalLength() : 350
+    gsap.set(el, { strokeDasharray: len, strokeDashoffset: len })
+  }
+
+  setupLine(svgLineC1.value)
+  setupLine(svgLineC2.value)
+  setupLine(svgLineC3.value)
+
+  gsap.set(camadasImg.value,     { autoAlpha: 0, scale: 0.9, y: 30 })
+  gsap.set(camadasInfoCol.value, { autoAlpha: 0, x: 40 })
+  gsap.set([contentC1.value, contentC2.value, contentC3.value], { autoAlpha: 0, y: 15, scale: 0.95 })
+
+  tl
+    .to(camadasImg.value,     { autoAlpha: 1, scale: 1, y: 0, duration: 1 }, 0)
+    .to(camadasInfoCol.value, { autoAlpha: 1, x: 0, duration: 0.8 }, 0.2)
+
+    // Linha 1 & Rótulo Camada 01 (Lona Hexafibra)
+    .to(svgLineC1.value, { strokeDashoffset: 0, duration: 0.7, ease: 'power2.inOut' }, 0.5)
+    .to(contentC1.value, { autoAlpha: 1, y: 0, scale: 1, duration: 0.4 }, 0.8)
+
+    // Linha 2 & Rótulo Camada 02 (Espuma de Alto Retorno)
+    .to(svgLineC2.value, { strokeDashoffset: 0, duration: 0.7, ease: 'power2.inOut' }, 0.7)
+    .to(contentC2.value, { autoAlpha: 1, y: 0, scale: 1, duration: 0.4 }, 1.0)
+
+    // Linha 3 & Rótulo Camada 03 (Granulado TS40)
+    .to(svgLineC3.value, { strokeDashoffset: 0, duration: 0.7, ease: 'power2.inOut' }, 0.9)
+    .to(contentC3.value, { autoAlpha: 1, y: 0, scale: 1, duration: 0.4 }, 1.2)
+}
+
+// ── GSAP — Slide 04 (A Superfície Perfeita) ───────────────────
+function animateSlide02() {
+  const tl = gsap.timeline({ defaults: { ease: 'expo.out' } })
+
+  gsap.set(s2ImageFrame.value, { clipPath: 'inset(0 100% 0 0)', autoAlpha: 0 })
+  gsap.set(s2HexaImg.value,    { scale: 1.12 })
+  gsap.set(s2TitleBlock.value, { autoAlpha: 0, y: 30 })
+  gsap.set(s2Concept.value,    { autoAlpha: 0, y: 20 })
+  gsap.set([topic1.value, topic2.value, topic3.value], { autoAlpha: 0, x: -30 })
+  gsap.set([line1.value, line2.value, line3.value], { scaleX: 0, transformOrigin: 'left center' })
+
+  tl
+    .to(s2ImageFrame.value, { clipPath: 'inset(0 0% 0 0)', autoAlpha: 1, duration: 1.1 }, 0)
+    .to(s2HexaImg.value,    { scale: 1, duration: 1.6, ease: 'power2.out' }, 0)
+    .to(s2TitleBlock.value, { autoAlpha: 1, y: 0, duration: 0.7 }, 0.4)
+    .to(s2Concept.value,    { autoAlpha: 1, y: 0, duration: 0.55 }, 0.65)
+    .to(topic1.value,       { autoAlpha: 1, x: 0, duration: 0.45 }, 0.85)
+    .to(line1.value,        { scaleX: 1, duration: 0.7, ease: 'power3.inOut' }, 0.92)
+    .to(topic2.value,       { autoAlpha: 1, x: 0, duration: 0.45 }, 1.1)
+    .to(line2.value,        { scaleX: 1, duration: 0.7, ease: 'power3.inOut' }, 1.17)
+    .to(topic3.value,       { autoAlpha: 1, x: 0, duration: 0.45 }, 1.35)
+    .to(line3.value,        { scaleX: 1, duration: 0.7, ease: 'power3.inOut' }, 1.42)
+}
+
+// ── GSAP — Slide 05 (Antes & Depois) ──────────────────────────
+function animateSlide03() {
+  const tl = gsap.timeline({ defaults: { ease: 'expo.out' } })
+
+  sliderPos.value = 5
+  const animObj = { pos: 5 }
+
+  gsap.set(s3Compare.value,     { autoAlpha: 0, scale: 0.94 })
+  gsap.set(s3Handle.value,      { autoAlpha: 0 })
+  gsap.set(s3LabelAntes.value,  { autoAlpha: 0, y: 6 })
+  gsap.set(s3LabelDepois.value, { autoAlpha: 0, y: 6 })
+  gsap.set(s3Right.value,       { autoAlpha: 0, x: 40 })
+  gsap.set(s3TitleBlock.value,  { autoAlpha: 0, y: 25 })
+  gsap.set([s3Phrase1.value, s3Phrase2.value, s3Phrase3.value], { autoAlpha: 0, x: 20 })
+
+  tl
+    .to(s3Compare.value,    { autoAlpha: 1, scale: 1, duration: 0.8 }, 0)
+    .to(s3LabelAntes.value, { autoAlpha: 1, y: 0, duration: 0.4 }, 0.6)
+    .to(s3Right.value,      { autoAlpha: 1, x: 0, duration: 0.7 }, 0.3)
+    .to(s3TitleBlock.value, { autoAlpha: 1, y: 0, duration: 0.6 }, 0.5)
+    .to(animObj, {
+      pos: 50,
+      duration: 1.3,
+      ease: 'power3.inOut',
+      onUpdate: () => { sliderPos.value = animObj.pos }
+    }, 0.8)
+    .to(s3Handle.value,      { autoAlpha: 1, duration: 0.3 }, 1.6)
+    .to(s3LabelDepois.value, { autoAlpha: 1, y: 0, duration: 0.4 }, 1.5)
+    .to(s3Phrase1.value,     { autoAlpha: 1, x: 0, duration: 0.45 }, 1.3)
+    .to(s3Phrase2.value,     { autoAlpha: 1, x: 0, duration: 0.45 }, 1.6)
+    .to(s3Phrase3.value,     { autoAlpha: 1, x: 0, duration: 0.45 }, 1.9)
+}
+
+// ── GSAP — Slide 06 (Etapas) ──────────────────────────────────
+function animateSlide04() {
+  const tl = gsap.timeline({ defaults: { ease: 'expo.out' } })
+  activeEtapa.value = 0
+
+  gsap.set(s4Header.value, { autoAlpha: 0, y: -25 })
+  if (s4CardsWrap.value?.children) {
+    gsap.set(s4CardsWrap.value.children, { autoAlpha: 0, y: 35 })
+  }
+
+  tl
+    .to(s4Header.value, { autoAlpha: 1, y: 0, duration: 0.8 }, 0)
+    .to(s4CardsWrap.value?.children || [], {
+      autoAlpha: 1,
+      y: 0,
+      duration: 0.7,
+      stagger: 0.12,
+    }, 0.2)
+}
+
+// ── GSAP — Slide 07 (Clientes) ────────────────────────────────
+function animateSlide05() {
+  const tl = gsap.timeline({ defaults: { ease: 'expo.out' } })
+  atletas.value.forEach(a => { a.revealed = false })
+
+  gsap.set(s5Header.value, { autoAlpha: 0, y: -25 })
+  if (s5Grid.value?.children) {
+    gsap.set(s5Grid.value.children, { autoAlpha: 0, scale: 0.8, y: 25 })
+  }
+
+  tl
+    .to(s5Header.value, { autoAlpha: 1, y: 0, duration: 0.8 }, 0)
+    .to(s5Grid.value?.children || [], {
+      autoAlpha: 1,
+      scale: 1,
+      y: 0,
+      duration: 0.6,
+      stagger: 0.08,
+    }, 0.2)
+}
+
+// ── GSAP — Slide 08 (Proposta) ────────────────────────────────
+function animateSlide06() {
+  const tl = gsap.timeline({ defaults: { ease: 'expo.out' } })
+
+  gsap.set(s6Header.value, { autoAlpha: 0, y: -25 })
+  gsap.set(s6Card.value,   { autoAlpha: 0, scale: 0.95, y: 30 })
+
+  tl
+    .to(s6Header.value, { autoAlpha: 1, y: 0, duration: 0.8 }, 0)
+    .to(s6Card.value,   { autoAlpha: 1, scale: 1, y: 0, duration: 0.9 }, 0.25)
+}
+
+// ── Lifecycle ─────────────────────────────────────────────────
+onMounted(async () => {
+  await nextTick()
+  rootEl.value?.focus()
+  animateSlide01()
+})
+</script>
+
+<style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=Geist:wght@300;400;500;600;700;800&display=swap');
+
+/* ── Container base da apresentação ─────────────────────────── */
+.pres-root {
+  position: fixed;
+  inset: 0;
+  background: #0d1012;
+  overflow: hidden;
+  outline: none;
+  font-family: 'Geist', sans-serif;
+  color: #fff;
+}
+
+/* ── Botão Sair da Apresentação ──────────────────────────── */
+.exit-pres-btn {
+  position: fixed;
+  top: clamp(1rem, 2.5vw, 1.8rem);
+  left: clamp(1rem, 2.5vw, 1.8rem);
+  z-index: 210;
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.5rem 1.1rem;
+  border-radius: 30px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: rgba(255, 255, 255, 0.7);
+  font-size: clamp(0.75rem, 0.9vw, 0.85rem);
+  font-weight: 500;
+  cursor: pointer;
+  backdrop-filter: blur(14px);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.exit-pres-btn:hover {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.4);
+  color: #ffffff;
+  transform: translateX(-3px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+}
+
+.exit-icon {
+  width: 16px;
+  height: 16px;
+  transition: transform 0.3s ease;
+}
+
+.exit-pres-btn:hover .exit-icon {
+  transform: translateX(-3px);
+}
+
+/* ── Setas de navegação laterais ─────────────────────────── */
+.nav-arrow {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 200;
+  width: 44px;
+  height: 44px;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 50%;
+  background: rgba(13,16,18,0.7);
+  backdrop-filter: blur(8px);
+  color: rgba(255,255,255,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s, background 0.2s;
+}
+
+.nav-arrow:hover {
+  border-color: rgba(255,255,255,0.35);
+  color: #fff;
+  background: rgba(13,16,18,0.95);
+}
+
+.nav-arrow--left  { left: 1.5rem; }
+.nav-arrow--right { right: 1.5rem; }
+.nav-arrow.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.nav-arrow svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* ── Contador de slides ──────────────────────────────────────── */
+.slide-counter {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 2rem;
+  z-index: 200;
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  color: rgba(255,255,255,0.2);
+}
+
+/* ── Slides genérico ─────────────────────────────────────────── */
+.slide {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.slide.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   SLIDE 01 — Capa (Logo Reveal)
+   ══════════════════════════════════════════════════════════════ */
+.slide-01 {
+  align-items: center;
+  justify-content: center;
+  background: #0d1012;
+}
+
+.particles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.particle {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(105,105,105,0.2);
+  animation: drift linear infinite;
+}
+
+@keyframes drift {
+  0%,100% { transform: translateY(0) scale(1);    opacity: 0.15; }
+  50%      { transform: translateY(-18px) scale(1.25); opacity: 0.3; }
+}
+
+.logo-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+  position: relative;
+  z-index: 1;
+}
+
+.logo-line {
+  width: 100px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #696969 50%, transparent);
+}
+
+.logo-container {
+  position: relative;
+  padding: 1.5rem 3rem;
+}
+
+.logo-container::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, rgba(105,105,105,0.07) 0%, transparent 70%);
+}
+
+.taurun-logo {
+  width: clamp(140px, 18vw, 280px);
+  height: auto;
+  display: block;
+  filter: brightness(0) invert(1) brightness(0.42) saturate(0);
+}
+
+.tagline {
+  font-size: clamp(0.6rem, 1vw, 0.75rem);
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: rgba(105,105,105,0.55);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   SLIDE 02 — MAPA OFICIAL DO BRASIL TECH & ANIMADO (10s)
+   ══════════════════════════════════════════════════════════════ */
+.slide-mapa {
+  align-items: center;
+  justify-content: center;
+  background: #0d1012;
+  padding: 2rem clamp(2rem, 4vw, 5rem);
+  width: 100%;
+  height: 100%;
+}
+
+.mapa-container {
+  width: 100%;
+  max-width: 1200px;
+  height: 100%;
+  display: grid;
+  grid-template-columns: 40% 60%;
+  gap: clamp(2rem, 4vw, 4rem);
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+}
+
+.mapa-info-col {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2rem;
+  z-index: 10;
+}
+
+.mapa-title-block {
+  display: flex;
+  flex-direction: column;
+  line-height: 0.95;
+}
+
+.mapa-sup {
+  font-family: 'Geist', sans-serif;
+  font-size: clamp(1rem, 1.6vw, 1.4rem);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.mapa-italic {
+  font-family: 'Bodoni Moda', Georgia, serif;
+  font-style: italic;
+  font-size: clamp(2.8rem, 4.8vw, 4.5rem);
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.mapa-desc {
+  font-size: clamp(0.95rem, 1.25vw, 1.15rem);
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 400;
+}
+
+.mapa-desc strong {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.mapa-single-stat-card {
+  width: 100%;
+  padding: 2.2rem 2.5rem;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(12px);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+.mapa-big-number-wrap {
+  display: flex;
+  align-items: baseline;
+  line-height: 1;
+}
+
+.mapa-big-number, .mapa-big-plus {
+  font-family: 'Geist', sans-serif;
+  font-size: clamp(3.8rem, 5.5vw, 5.5rem);
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.03em;
+}
+
+.mapa-big-label {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.25em;
+  color: rgba(255, 255, 255, 0.5);
+  font-weight: 600;
+}
+
+.mapa-stat-card--full {
+  grid-column: 1 / -1;
+  padding: 1rem 1.2rem;
+}
+
+.mapa-stat-value {
+  font-size: clamp(1.8rem, 2.6vw, 2.5rem);
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+}
+
+.mapa-stat-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.mapa-stat-status {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.5rem;
+}
+
+.mapa-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+  animation: pulseDot 1.5s infinite alternate;
+}
+
+.mapa-status-dot.is-complete {
+  background: #ffffff;
+  animation: none;
+}
+
+@keyframes pulseDot {
+  0% { opacity: 0.3; transform: scale(0.8); }
+  100% { opacity: 1; transform: scale(1.2); }
+}
+
+.mapa-status-text {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.7);
+  letter-spacing: 0.05em;
+  font-weight: 500;
+}
+
+.mapa-progress-track {
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.mapa-progress-bar {
+  height: 100%;
+  background: #ffffff;
+  border-radius: 4px;
+  transition: width 0.1s linear;
+}
+
+/* Coluna Direita (Mapa do Brasil Oficial + Sincronização SVG) */
+.mapa-svg-col {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.mapa-svg-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 740px;
+  height: 680px;
+  border-radius: 18px;
+  background: radial-gradient(circle at center, rgba(255,255,255,0.02) 0%, rgba(0,0,0,0.5) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 1.5rem;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mapa-br-svg-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: brightness(0) invert(1) opacity(0.35) drop-shadow(0 0 10px rgba(255,255,255,0.1));
+  pointer-events: none;
+}
+
+.mapa-overlay-svg {
+  position: absolute;
+  inset: 1.5rem;
+  width: calc(100% - 3rem);
+  height: calc(100% - 3rem);
+  pointer-events: none;
+}
+
+.mapa-scanner-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent);
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
+  z-index: 10;
+  pointer-events: none;
+}
+
+.mapa-net-line {
+  stroke: rgba(255, 255, 255, 0.25);
+  stroke-width: 0.3;
+  stroke-dasharray: 1 1;
+}
+
+.node-pulse-ring {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.6);
+  stroke-width: 0.3;
+  animation: ringPulse 2s infinite ease-out;
+  transform-origin: center;
+}
+
+@keyframes ringPulse {
+  0%   { r: 0.8px; opacity: 0.9; }
+  100% { r: 4px; opacity: 0; }
+}
+
+.mapa-hubs-labels {
+  pointer-events: none;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   SLIDE 03 — A SOLUÇÃO: ESTRUTURA T50-PRO (ABSORÇÃO HÍBRIDA)
+   ══════════════════════════════════════════════════════════════ */
+.slide-camadas {
+  align-items: center;
+  justify-content: center;
+  background: #0d1012;
+  padding: 2rem clamp(2rem, 5vw, 6rem);
+  width: 100%;
+  height: 100%;
+}
+
+.camadas-grid-container {
+  max-width: 1350px;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: 56% 44%;
+  gap: clamp(2rem, 4vw, 4rem);
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+}
+
+.camadas-stage-col {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.camadas-stage {
+  position: relative;
+  width: 100%;
+  max-width: 760px;
+  aspect-ratio: 1000 / 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 1000px;
+  transform-style: preserve-3d;
+  cursor: pointer;
+}
+
+.camadas-render-img {
+  width: 82%;
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 20px 40px rgba(0,0,0,0.85));
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.camadas-lines-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.svg-line {
+  fill: none;
+  stroke: #ffffff;
+  stroke-width: 3.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.svg-dot {
+  fill: #ffffff;
+}
+
+.svg-dot-pulse {
+  fill: rgba(255, 255, 255, 0.4);
+  animation: dotPulse 2s infinite ease-in-out;
+}
+
+.camadas-callout {
+  position: absolute;
+  z-index: 30;
+  display: flex;
+  flex-direction: column;
+  pointer-events: none;
+}
+
+.callout-c1 {
+  top: -4%;
+  left: -16%;
+}
+
+.callout-c2 {
+  top: -6%;
+  right: -6%;
+}
+
+.callout-c3 {
+  bottom: -4%;
+  left: -16%;
+}
+
+.callout-box {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  padding: 0.85rem 1.25rem;
+  border-radius: 12px;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.callout-header-brand {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.callout-hexafibra-logo {
+  height: 14px;
+  width: auto;
+  filter: brightness(0) invert(1);
+}
+
+.callout-badge {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: rgba(255, 255, 255, 0.45);
+  text-transform: uppercase;
+}
+
+.callout-title {
+  font-size: clamp(0.9rem, 1.2vw, 1.1rem);
+  font-weight: 600;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+}
+
+.callout-tag {
+  font-size: clamp(0.7rem, 0.85vw, 0.8rem);
+  color: rgba(255, 255, 255, 0.5);
+  font-weight: 400;
+}
+
+.camadas-info-col {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1.8rem;
+  z-index: 10;
+}
+
+.camadas-title-block {
+  display: flex;
+  flex-direction: column;
+  line-height: 0.95;
+}
+
+.camadas-sup-label {
+  font-family: 'Geist', sans-serif;
+  font-size: clamp(1rem, 1.5vw, 1.3rem);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.camadas-title-italic {
+  font-family: 'Bodoni Moda', Georgia, serif;
+  font-style: italic;
+  font-size: clamp(2.8rem, 4.5vw, 4.2rem);
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.camadas-logo-brand {
+  margin: 0.5rem 0;
+}
+
+.t50pro-logo-img {
+  width: clamp(180px, 22vw, 320px);
+  height: auto;
+  display: block;
+  filter: brightness(0) invert(1);
+}
+
+.camadas-text-desc {
+  font-size: clamp(1.1rem, 1.4vw, 1.35rem);
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.75);
+  font-weight: 400;
+}
+
+.camadas-text-desc strong {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.highlight-absorcao-hibida {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  padding: 0.3rem 0.8rem;
+  border-radius: 8px;
+  color: #ffffff;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  display: inline-block;
+  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.05);
+  transition: all 0.3s ease;
+}
+
+.highlight-absorcao-hibida:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: #ffffff;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   SLIDE 04 — ACABAMENTOS EM ALTO PADRÃO (FOTO QUINA + VERTICAL MAIOR)
+   ══════════════════════════════════════════════════════════════ */
+.slide-acabamentos {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #0d1012;
+  padding: 2.2rem clamp(1.5rem, 3.5vw, 4.5rem);
+  width: 100%;
+  height: 100%;
+}
+
+.acab-container {
+  max-width: 1440px;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: 46% 54%;
+  gap: clamp(2rem, 3.5vw, 4rem);
+  align-items: center;
+  margin: 0 auto;
+}
+
+.acab-info-col {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.acab-title-block {
+  display: flex;
+  flex-direction: column;
+  line-height: 1;
+}
+
+.acab-sup {
+  font-size: clamp(0.7rem, 0.95vw, 0.85rem);
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+  font-weight: 500;
+}
+
+.acab-title-italic {
+  font-family: 'Bodoni Moda', Georgia, serif;
+  font-style: italic;
+  font-size: clamp(2.2rem, 3.6vw, 3.5rem);
+  color: #ffffff;
+  margin-top: 0.2rem;
+  font-weight: 400;
+}
+
+.acab-desc {
+  font-size: clamp(0.9rem, 1.1vw, 1.1rem);
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 300;
+  margin: 0;
+}
+
+.acab-desc strong {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+/* Foto da Quina grande e solta no canto esquerdo (sem caixa) */
+.acab-quina-standalone {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin: 0.5rem 0;
+}
+
+.acab-quina-standalone-img {
+  width: clamp(240px, 22vw, 340px);
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 15px 35px rgba(0, 0, 0, 0.8));
+  transition: transform 0.4s ease;
+}
+
+.acab-quina-standalone-img:hover {
+  transform: scale(1.05) rotate(-2deg);
+}
+
+.acab-features-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.acab-feature-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.8rem;
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 0.8rem 1.1rem;
+  border-radius: 12px;
+}
+
+.acab-feature-icon {
+  color: #34d399;
+  font-weight: 700;
+  font-size: 0.95rem;
+  margin-top: 0.1rem;
+}
+
+.acab-feature-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.acab-feature-text strong {
+  font-size: 0.88rem;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.acab-feature-text span {
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.5);
+  line-height: 1.4;
+}
+
+/* ── Frame para Imagem Vertical (MAIOR) ── */
+.acab-vert-col {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.acab-vert-frame {
+  position: relative;
+  width: 100%;
+  max-width: 540px;
+  height: 82vh;
+  max-height: 640px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(0, 0, 0, 0.4);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  transition: transform 0.4s ease, border-color 0.4s ease;
+}
+
+.acab-vert-frame:hover {
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.acab-vert-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: transform 0.6s ease;
+}
+
+.acab-vert-frame:hover .acab-vert-img {
+  transform: scale(1.03);
+}
+
+.vert-img-overlay-badge {
+  position: absolute;
+  bottom: 1.2rem;
+  left: 1.2rem;
+  background: rgba(13, 16, 18, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 0.5rem 1rem;
+  border-radius: 30px;
+  backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.badge-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #34d399;
+  box-shadow: 0 0 8px #34d399;
+}
+
+.vert-img-overlay-badge span {
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.vert-frame-glow {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 70%, rgba(13, 16, 18, 0.6) 100%);
+  pointer-events: none;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   SLIDE BENEFÍCIOS CHAVE (5 CARDS DE VANTAGENS)
+   ══════════════════════════════════════════════════════════════ */
+.slide-beneficios {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #0d1012;
+  padding: 2.5rem clamp(1.5rem, 4vw, 5rem);
+  width: 100%;
+  height: 100%;
+}
+
+.ben-container {
+  max-width: 1440px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(2rem, 3.5vw, 3.5rem);
+  margin: 0 auto;
+}
+
+.ben-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  line-height: 1;
+}
+
+.ben-eyebrow {
+  font-size: clamp(0.7rem, 0.95vw, 0.85rem);
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+  font-weight: 500;
+}
+
+.ben-title {
+  font-family: 'Bodoni Moda', Georgia, serif;
+  font-style: italic;
+  font-size: clamp(2.2rem, 3.8vw, 3.6rem);
+  color: #ffffff;
+  margin-top: 0.3rem;
+  font-weight: 400;
+}
+
+.ben-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: clamp(1rem, 1.8vw, 1.8rem);
+  width: 100%;
+}
+
+.ben-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: clamp(1.8rem, 2.5vw, 2.8rem) clamp(1rem, 1.5vw, 1.5rem);
+  border-radius: 20px;
+  backdrop-filter: blur(14px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  min-height: 220px;
+}
+
+.ben-card:hover {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 0 20px rgba(255, 255, 255, 0.05);
+}
+
+.ben-icon-box {
+  width: 64px;
+  height: 64px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.4rem;
+  color: #ffffff;
+  transition: all 0.3s ease;
+}
+
+.ben-card:hover .ben-icon-box {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.4);
+  transform: scale(1.1);
+}
+
+.ben-icon-box svg {
+  width: 32px;
+  height: 32px;
+}
+
+.ben-card-text {
+  font-size: clamp(0.88rem, 1.05vw, 1.05rem);
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.85);
+  font-weight: 500;
+  margin: 0;
+}
+
+.acab-vert-frame:hover {
+  border-color: rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.vert-placeholder-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  z-index: 2;
+}
+
+.vert-placeholder-icon {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.vert-placeholder-icon svg {
+  width: 24px;
+  height: 24px;
+}
+
+.vert-placeholder-eyebrow {
+  font-size: 0.6rem;
+  letter-spacing: 0.25em;
+  color: rgba(255, 255, 255, 0.35);
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.vert-placeholder-title {
+  font-family: 'Bodoni Moda', Georgia, serif;
+  font-style: italic;
+  font-size: 1.25rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0;
+}
+
+.vert-placeholder-sub {
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.4);
+  line-height: 1.4;
+  margin: 0;
+}
+
+.vert-frame-glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(255, 255, 255, 0.04) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* ══════════════════════════════
+   SLIDE 04 — Superfície Perfeita (slide-02)
+══════════════════════════════ */
+.slide-02 {
+  display: grid;
+  grid-template-columns: 45% 55%;
+  align-items: stretch;
+  width: 100%;
+  height: 100%;
+}
+
+/* ── Texto (coluna esquerda) ── */
+.s2-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(2rem, 5vw, 5rem) clamp(1.5rem, 3.5vw, 4rem);
+  gap: 1.8rem;
+  position: relative;
+  z-index: 2;
+}
+
+/* Título */
+.s2-title-block {
+  display: flex;
+  flex-direction: column;
+  line-height: 1;
+  gap: 0.1rem;
+}
+.s2-sup {
+  font-size: clamp(0.9rem, 1.6vw, 1.3rem);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.4);
+  font-weight: 400;
+}
+.s2-italic {
+  font-family: 'Bodoni Moda', Georgia, serif;
+  font-style: italic;
+  font-size: clamp(3.5rem, 8vw, 8rem);
+  color: #a3a3a3;
+  font-weight: 400;
+  line-height: 0.92;
+  letter-spacing: -0.02em;
+}
+
+/* Conceito */
+.s2-concept {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+.s2-concept-lead {
+  font-size: clamp(1rem, 1.6vw, 1.4rem);
+  color: rgba(255,255,255,0.4);
+  font-weight: 300;
+  margin: 0;
+  letter-spacing: 0.01em;
+}
+.s2-concept-key {
+  font-family: 'Bebas Neue', sans-serif;
+  font-weight: 700;
+  font-style: italic;
+  text-transform: uppercase;
+  font-size: clamp(3.2rem, 6vw, 6.2rem);
+  color: #ffffff;
+  letter-spacing: 0.04em;
+  line-height: 0.92;
+  transform: skewX(-5deg);
+  display: inline-block;
+}
+.s2-concept-sub {
+  font-size: clamp(1rem, 1.4vw, 1.25rem);
+  color: rgba(255, 255, 255, 0.65);
+  font-weight: 300;
+  margin: 0.6rem 0 0;
+  letter-spacing: 0.02em;
+}
+
+/* Tópicos */
+.s2-topics {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.s2-topic {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.s2-topic-text {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.s2-bullet {
+  font-size: clamp(0.6rem, 0.75vw, 0.8rem);
+  letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.15);
+  font-weight: 600;
+  padding-top: 0.2rem;
+  flex-shrink: 0;
+}
+
+.s2-topic-text p {
+  font-size: clamp(0.85rem, 1.2vw, 1.1rem);
+  color: rgba(255,255,255,0.42);
+  line-height: 1.55;
+  font-weight: 300;
+  margin: 0;
+}
+.s2-topic-text strong {
+  color: rgba(255,255,255,0.78);
+  font-weight: 500;
+}
+
+.s2-line-wrap {
+  position: relative;
+  overflow: visible;
+}
+
+.s2-line {
+  height: 2.5px;
+  width: calc(100% + 55vw);
+  background: linear-gradient(
+    90deg,
+    rgba(255,255,255,0.85) 0%,
+    rgba(255,255,255,0.45) 40%,
+    rgba(255,255,255,0.15) 75%,
+    transparent 100%
+  );
+  transform-origin: left center;
+}
+
+/* ── Imagem (coluna direita) ── */
+.s2-image-col {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+}
+
+.s2-image-frame {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.s2-hexaimg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  filter: contrast(1.06) brightness(0.82);
+  transform-origin: center center;
+}
+
+.s2-image-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to right,
+    #0d1012 0%,
+    rgba(13,16,18,0.4) 20%,
+    transparent 55%
+  );
+  pointer-events: none;
+}
+
+.s2-image-vignette {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to bottom, rgba(13,16,18,0.5) 0%, transparent 20%),
+    linear-gradient(to top,    rgba(13,16,18,0.5) 0%, transparent 20%);
+  pointer-events: none;
+}
+
+/* ══════════════════════════════
+   SLIDE 05 — Antes & Depois (slide-03)
+══════════════════════════════ */
+.slide-03 {
+  display: grid;
+  grid-template-columns: 55% 45%;
+  align-items: center;
+  padding: 4vw 5vw;
+  gap: 4vw;
+  background: #0d1012;
+  width: 100%;
+  height: 100%;
+}
+
+.s3-left {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.s3-compare {
+  position: relative;
+  width: 100%;
+  height: 78vh;
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+  cursor: ew-resize;
+}
+
+.s3-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+.s3-img--antes {
+  filter: brightness(0.75) saturate(0.85);
+}
+.s3-img--depois {
+  filter: brightness(0.88);
+}
+
+.s3-depois-wrap {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.s3-label {
+  position: absolute;
+  font-size: clamp(0.65rem, 0.9vw, 0.8rem);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-weight: 500;
+  padding: 0.3rem 0.7rem;
+  border-radius: 4px;
+  backdrop-filter: blur(6px);
+}
+.s3-label--antes {
+  top: 1rem;
+  left: 1rem;
+  background: rgba(0,0,0,0.55);
+  color: rgba(255,255,255,0.5);
+}
+.s3-label--depois {
+  top: 1rem;
+  right: 1rem;
+  background: rgba(255,255,255,0.1);
+  color: rgba(255,255,255,0.85);
+  border: 1px solid rgba(255,255,255,0.15);
+}
+
+.s3-right {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2rem;
+}
+
+.s3-title-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  line-height: 1;
+}
+.s3-sup {
+  font-size: clamp(0.75rem, 1.2vw, 1rem);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.3);
+  font-weight: 400;
+}
+.s3-italic {
+  font-family: 'Bodoni Moda', Georgia, serif;
+  font-style: italic;
+  font-size: clamp(1.8rem, 3.5vw, 3.5rem);
+  color: #a3a3a3;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.01em;
+}
+
+.s3-phrases {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  border-left: 1px solid rgba(255,255,255,0.08);
+  padding-left: 1.2rem;
+}
+.s3-phrase {
+  font-size: clamp(0.9rem, 1.4vw, 1.25rem);
+  color: rgba(255,255,255,0.45);
+  font-weight: 300;
+  letter-spacing: 0.02em;
+}
+.s3-phrase:first-child {
+  color: rgba(255,255,255,0.65);
+  font-weight: 400;
+}
+
+.s3-title-logo {
+  max-width: clamp(140px, 18vw, 260px);
+  height: auto;
+  margin-top: 0.5rem;
+  filter: brightness(0) invert(1) brightness(0.8) saturate(0);
+  display: block;
+}
+
+.s3-handle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 40px;
+  transform: translateX(-50%);
+  z-index: 10;
+  cursor: ew-resize;
+  pointer-events: auto;
+}
+
+.s3-handle-line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 3.5px;
+  background: rgba(255,255,255,0.9);
+  box-shadow: 0 0 12px rgba(255,255,255,0.5);
+  pointer-events: none;
+}
+
+.s3-handle-grip {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.4);
+  pointer-events: auto;
+  cursor: ew-resize;
+  color: #0d1012;
+}
+
+/* ══════════════════════════════
+   SLIDE 06 — Etapas do Projeto (slide-04)
+══════════════════════════════ */
+.slide-04 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4vw 6vw;
+  background: #0d1012;
+  width: 100%;
+  height: 100%;
+}
+
+.s4-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 1320px;
+  gap: clamp(2rem, 4vh, 3.5rem);
+}
+
+.s4-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.2rem;
+  line-height: 1;
+}
+
+.s4-eyebrow {
+  font-size: clamp(0.75rem, 1.2vw, 1rem);
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.4);
+  font-weight: 500;
+}
+
+.s4-title {
+  font-family: 'Bodoni Moda', Georgia, serif;
+  font-style: italic;
+  font-size: clamp(2.5rem, 5.5vw, 5.5rem);
+  color: #a3a3a3;
+  font-weight: 400;
+  line-height: 1.05;
+  margin: 0;
+}
+
+.s4-cards-wrapper {
+  display: flex;
+  gap: 1.25rem;
+  width: 100%;
+  height: clamp(340px, 48vh, 520px);
+}
+
+.s4-card {
+  flex: 1;
+  min-width: 85px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 20px;
+  padding: clamp(1.5rem, 2.5vw, 2.5rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: flex 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+              background 0.5s ease,
+              border-color 0.5s ease,
+              box-shadow 0.5s ease;
+}
+
+.s4-card:hover {
+  border-color: rgba(255,255,255,0.18);
+  background: rgba(255,255,255,0.035);
+}
+
+.s4-card.is-active {
+  flex: 3.8;
+  background: linear-gradient(155deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.015) 100%);
+  border-color: rgba(255,255,255,0.25);
+  box-shadow: 0 25px 60px rgba(0,0,0,0.5);
+}
+
+.s4-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.s4-number {
+  font-size: clamp(0.8rem, 1vw, 0.95rem);
+  letter-spacing: 0.2em;
+  color: rgba(255,255,255,0.28);
+  font-weight: 600;
+}
+
+.s4-card.is-active .s4-number {
+  color: rgba(255,255,255,0.6);
+}
+
+.s4-icon-box {
+  width: clamp(44px, 3.5vw, 54px);
+  height: clamp(44px, 3.5vw, 54px);
+  border-radius: 14px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255,255,255,0.5);
+  transition: all 0.4s ease;
+}
+
+.s4-card:hover .s4-icon-box {
+  border-color: rgba(255,255,255,0.2);
+  color: rgba(255,255,255,0.85);
+}
+
+.s4-card.is-active .s4-icon-box {
+  background: rgba(255,255,255,0.12);
+  border-color: rgba(255,255,255,0.35);
+  color: #ffffff;
+  box-shadow: 0 0 20px rgba(255,255,255,0.1);
+}
+
+.s4-icon {
+  width: 22px;
+  height: 22px;
+}
+
+.s4-card-body {
+  opacity: 0;
+  transform: translateY(20px);
+  pointer-events: none;
+  transition: opacity 0.45s ease 0.12s, transform 0.45s ease 0.12s;
+  margin-top: auto;
+}
+
+.s4-card.is-active .s4-card-body {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.s4-card-title {
+  font-family: 'Bodoni Moda', Georgia, serif;
+  font-style: italic;
+  font-size: clamp(2.2rem, 4vw, 4.2rem);
+  color: #ffffff;
+  font-weight: 400;
+  line-height: 1;
+  margin: 0 0 1.2rem 0;
+  letter-spacing: -0.01em;
+}
+
+.s4-card-desc {
+  font-family: 'Geist', sans-serif;
+  font-size: clamp(0.95rem, 1.3vw, 1.35rem);
+  color: rgba(255,255,255,0.68);
+  line-height: 1.55;
+  font-weight: 300;
+  margin: 0;
+  max-width: 92%;
+}
+
+.s4-collapsed-label {
+  position: absolute;
+  bottom: 2.5rem;
+  left: 50%;
+  transform: translateX(-50%) rotate(-90deg);
+  transform-origin: center center;
+  white-space: nowrap;
+  font-family: 'Bodoni Moda', Georgia, serif;
+  font-style: italic;
+  font-size: clamp(1rem, 1.4vw, 1.3rem);
+  color: rgba(255,255,255,0.35);
+  opacity: 1;
+  transition: opacity 0.35s ease;
+  pointer-events: none;
+}
+
+.s4-card.is-active .s4-collapsed-label {
+  opacity: 0;
+}
+
+/* ══════════════════════════════
+   SLIDE 07 — Quem São Nossos Clientes (slide-05)
+══════════════════════════════ */
+.slide-05 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3vw 5vw;
+  background: #0d1012;
+  width: 100%;
+  height: 100%;
+}
+
+.s5-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 1280px;
+  gap: clamp(1.8rem, 3.5vh, 3rem);
+}
+
+.s5-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.2rem;
+  line-height: 1;
+}
+
+.s5-eyebrow {
+  font-size: clamp(0.75rem, 1.2vw, 1rem);
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.4);
+  font-weight: 500;
+}
+
+.s5-title {
+  font-family: 'Bodoni Moda', Georgia, serif;
+  font-style: italic;
+  font-size: clamp(2.5rem, 5.5vw, 5.5rem);
+  color: #a3a3a3;
+  font-weight: 400;
+  line-height: 1.05;
+  margin: 0;
+}
+
+.s5-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: clamp(1.2rem, 2.5vw, 2.2rem) clamp(1rem, 2vw, 2rem);
+  width: 100%;
+  justify-items: center;
+}
+
+.s5-athlete-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.8rem;
+  cursor: pointer;
+  user-select: none;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.s5-athlete-item:hover {
+  transform: translateY(-4px);
+}
+
+.s5-avatar-wrap {
+  position: relative;
+  width: clamp(100px, 9.5vw, 150px);
+  height: clamp(100px, 9.5vw, 150px);
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.02);
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+  transition: border-color 0.4s ease, box-shadow 0.4s ease, transform 0.4s ease;
+}
+
+.s5-athlete-item:hover .s5-avatar-wrap {
+  border-color: rgba(255,255,255,0.35);
+  box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+}
+
+.s5-athlete-item.is-revealed .s5-avatar-wrap {
+  border-color: rgba(255,255,255,0.5);
+  box-shadow: 0 0 30px rgba(255,255,255,0.15);
+}
+
+.s5-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  filter: blur(18px) brightness(0.2) contrast(1.2);
+  transform: scale(1.15);
+  transition: filter 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.s5-athlete-item.is-revealed .s5-avatar-img {
+  filter: blur(0px) brightness(0.92) contrast(1.05);
+  transform: scale(1);
+}
+
+.s5-unrevealed-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  gap: 0.1rem;
+  background: radial-gradient(circle at center, rgba(13,16,18,0.5) 0%, rgba(13,16,18,0.85) 100%);
+  transition: opacity 0.45s ease;
+}
+
+.s5-athlete-item.is-revealed .s5-unrevealed-overlay {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.s5-mystery-mark {
+  font-family: 'Bodoni Moda', Georgia, serif;
+  font-style: italic;
+  font-size: clamp(1.8rem, 2.8vw, 2.8rem);
+  color: rgba(255,255,255,0.45);
+  line-height: 1;
+}
+
+@media (max-width: 1024px) {
+  .mapa-container { grid-template-columns: 1fr; overflow-y: auto; }
+  .s2-text, .s2-image-col, .s3-left, .s3-right { width: 100%; height: auto; }
+  .slide-02, .slide-03 { flex-direction: column; overflow-y: auto; }
+  .s5-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   SLIDE 09 — Orçamento & Investimento Comercial (slide-06)
+══════════════════════════════════════════════════════════════ */
+.slide-06 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3vw 5vw;
+  background: #0d1012;
+}
+
+.s6-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 1100px;
+  gap: clamp(1.5rem, 3vh, 2.5rem);
+}
+
+.s6-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.2rem;
+  line-height: 1;
+}
+
+.s6-eyebrow {
+  font-size: clamp(0.75rem, 1.2vw, 1rem);
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.4);
+  font-weight: 500;
+}
+
+.s6-title {
+  font-family: 'Bodoni Moda', Georgia, serif;
+  font-style: italic;
+  font-size: clamp(2.5rem, 5vw, 5rem);
+  color: #a3a3a3;
+  font-weight: 400;
+  line-height: 1.05;
+  margin: 0;
+}
+
+.s6-proposal-card {
+  width: 100%;
+  background: rgba(255,255,255,0.025);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 24px;
+  padding: clamp(1.8rem, 3vw, 3rem);
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+  backdrop-filter: blur(12px);
+}
+
+.s6-meta-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.s6-meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.s6-meta-label {
+  font-size: 0.65rem;
+  letter-spacing: 0.25em;
+  color: rgba(255,255,255,0.35);
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.s6-meta-value {
+  font-size: clamp(1rem, 1.3vw, 1.25rem);
+  color: #ffffff;
+  font-weight: 500;
+}
+
+.s6-items-table {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.s6-item-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.4rem clamp(1.2rem, 2vw, 2rem);
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 16px;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.s6-item-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  flex: 1;
+  min-width: 260px;
+}
+
+.s6-item-badge {
+  align-self: flex-start;
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  padding: 0.25rem 0.6rem;
+  border-radius: 4px;
+  background: rgba(255,255,255,0.08);
+  color: rgba(255,255,255,0.7);
+  font-weight: 600;
+}
+
+.s6-item-badge--opt {
+  background: rgba(255,255,255,0.04);
+  color: rgba(255,255,255,0.5);
+}
+
+.s6-item-name {
+  font-family: 'Bodoni Moda', Georgia, serif;
+  font-style: italic;
+  font-size: clamp(1.4rem, 2vw, 2.2rem);
+  color: #ffffff;
+  margin: 0;
+  font-weight: 400;
+}
+
+.s6-item-desc {
+  font-size: clamp(0.8rem, 1vw, 0.95rem);
+  color: rgba(255,255,255,0.45);
+  margin: 0;
+  font-weight: 300;
+}
+
+.s6-item-specs {
+  display: flex;
+  align-items: center;
+  gap: clamp(1.5rem, 3vw, 3rem);
+}
+
+.s6-spec {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.15rem;
+}
+
+.s6-spec-label {
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.3);
+}
+
+.s6-spec-val {
+  font-size: clamp(0.95rem, 1.3vw, 1.25rem);
+  color: rgba(255,255,255,0.85);
+  font-weight: 400;
+}
+
+.s6-spec--subtotal .s6-spec-val {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.s6-total-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem clamp(1.2rem, 2vw, 2rem);
+  background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.03) 100%);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 18px;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.s6-total-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.s6-total-label {
+  font-size: 0.65rem;
+  letter-spacing: 0.3em;
+  color: rgba(255,255,255,0.45);
+  font-weight: 500;
+}
+
+.s6-total-amount {
+  font-family: 'Bodoni Moda', Georgia, serif;
+  font-style: italic;
+  font-size: clamp(2rem, 4vw, 3.8rem);
+  color: #ffffff;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.s6-status-badge {
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 0.3rem 0.75rem;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 500;
+  transition: all 0.35s ease;
+}
+
+.s6-status-badge.is-special {
+  background: rgba(16, 185, 129, 0.12);
+  border-color: rgba(16, 185, 129, 0.35);
+  color: #34d399;
+}
+
+.s6-total-amount-wrap {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.s6-strikethrough-amount {
+  font-size: clamp(1.2rem, 2.2vw, 2rem);
+  color: rgba(255, 255, 255, 0.35);
+  text-decoration: line-through;
+  font-weight: 400;
+}
+
+.s6-total-amount.is-special {
+  color: #34d399;
+}
+
+.s6-discount-toggle-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.9rem 1.6rem;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  backdrop-filter: blur(8px);
+}
+
+.s6-discount-toggle-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.4);
+  transform: translateY(-2px);
+}
+
+.s6-discount-toggle-btn.is-applied {
+  background: rgba(16, 185, 129, 0.15);
+  border-color: rgba(16, 185, 129, 0.45);
+  color: #34d399;
+  box-shadow: 0 0 25px rgba(16, 185, 129, 0.2);
+}
+
+.s6-toggle-content {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.s6-toggle-icon {
+  width: 18px;
+  height: 18px;
+}
+
+.s6-perks {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 0.5rem;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+}
+
+.s6-perk {
+  font-size: clamp(0.75rem, 0.95vw, 0.9rem);
+  color: rgba(255,255,255,0.4);
+  font-weight: 300;
+}
+</style>

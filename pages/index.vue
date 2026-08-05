@@ -159,7 +159,8 @@ const handleGenerateProposal = () => {
 
 const handleOpenPresentation = () => {
   showModal.value = false
-  router.push('/apresentacao/revestimento')
+  const targetPath = quote.selectedProductId.value === 't50-pro' ? '/apresentacao/t50-pro' : '/apresentacao/revestimento'
+  router.push(targetPath)
 }
 
 const handleGoToList = () => {
