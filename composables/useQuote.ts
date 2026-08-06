@@ -232,7 +232,7 @@ export const useQuote = () => {
     isLoadingQuotes.value = true
     try {
       const data = await $fetch<any[]>('/api/quotes')
-      if (Array.isArray(data) && data.length > 0) {
+      if (Array.isArray(data)) {
         const fetched = data.map(q => ({
           id: q.id,
           clientName: q.clientName,
@@ -333,12 +333,18 @@ export const useQuote = () => {
   const deleteSavedQuote = async (id: string) => {
     const previousQuotes = [...savedQuotes.value]
     savedQuotes.value = savedQuotes.value.filter(q => q.id !== id)
+    if (process.client) {
+      localStorage.setItem('taurun_saved_quotes_cache', JSON.stringify(savedQuotes.value))
+    }
 
     try {
       await $fetch(`/api/quotes/${id}`, { method: 'DELETE' })
     } catch (err) {
       console.error('Erro ao excluir orçamento no banco Neon:', err)
       savedQuotes.value = previousQuotes
+      if (process.client) {
+        localStorage.setItem('taurun_saved_quotes_cache', JSON.stringify(previousQuotes))
+      }
     }
   }
 
