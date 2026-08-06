@@ -279,9 +279,7 @@
           </div>
 
           <div class="camadas-logo-brand">
-            <div class="t50gold-logo-wrap">
-              <span class="t50gold-logo-text">T50<span class="t50gold-logo-sub">GOLD</span><sup class="t50gold-tm">®</sup></span>
-            </div>
+            <img src="/camadas/t50-gold-logo.png" alt="T50-GOLD Logo" class="t50pro-logo-img" />
           </div>
 
           <p class="camadas-text-desc">
