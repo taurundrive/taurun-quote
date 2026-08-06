@@ -1,5 +1,5 @@
-<template>
-  <!-- Apresentação comercial — Taurun T50-PRO -->
+﻿<template>
+  <!-- Apresentação comercial — Taurun T50-GOLD -->
   <div
     class="pres-root"
     @keydown.right.prevent="nextSlide"
@@ -51,7 +51,7 @@
     </div>
 
     <!-- ═══════════════════════════════════════════
-         SLIDE 01 — Logo Reveal Capa (T50-PRO)
+         SLIDE 01 — Logo Reveal Capa (T50-GOLD)
     ════════════════════════════════════════════ -->
     <section
       class="slide slide-01"
@@ -189,7 +189,7 @@
     </section>
 
     <!-- ═══════════════════════════════════════════
-         SLIDE 03 — A Solução: Estrutura T50-PRO (Tecnologia de Absorção Híbrida)
+         SLIDE 03 — A Solução: Estrutura T50-GOLD (Tecnologia de Absorção Híbrida)
     ════════════════════════════════════════════ -->
     <section
       class="slide slide-camadas"
@@ -351,10 +351,10 @@
         <!-- Coluna Direita: Controles e Texto Editorial (Sem Bullets) -->
         <div class="abs-right-col">
           <div class="abs-header" ref="absHeader">
-            <span class="abs-eyebrow">A FÍSICA DO T50-PRO</span>
+            <span class="abs-eyebrow">A FÍSICA DO T50-GOLD</span>
             <h2 class="abs-title">Absorção Híbrida</h2>
             <p class="abs-lead">
-              A inteligência do tatame T50-PRO está na combinação precisa de duas densidades que reagem fisicamente à intensidade da força aplicada.
+              A inteligência do tatame T50-GOLD está na combinação precisa de duas densidades que reagem fisicamente à intensidade da força aplicada.
             </p>
           </div>
 
@@ -412,7 +412,7 @@
           </div>
 
           <p class="acab-desc" ref="acabDesc">
-            O <strong>T50-PRO</strong> usa acabamentos nas quinas e nas laterais que proporcionam um aspecto altamente profissional, durabilidade extrema e segurança total para o seu tatame.
+            O <strong>T50-GOLD</strong> usa acabamentos nas quinas e nas laterais que proporcionam um aspecto altamente profissional, durabilidade extrema e segurança total para o seu tatame.
           </p>
 
           <!-- Lista de Instruções / Diferenciais -->
@@ -428,7 +428,7 @@
             <div class="acab-feature-item">
               <span class="acab-feature-icon">✓</span>
               <div class="acab-feature-text">
-                <strong>Tatame com Cantoneira Taurun T50-PRO</strong>
+                <strong>Tatame com Cantoneira Taurun T50-GOLD</strong>
                 <span>Proteção lateral contínua com alinhamento perfeito sem pontas expostas.</span>
               </div>
             </div>
@@ -448,7 +448,7 @@
           <div class="acab-vert-frame" ref="acabVertFrame">
             <img
               src="/tatame-com-cantoneira.png"
-              alt="Tatame com Cantoneira Taurun T50-PRO"
+              alt="Tatame com Cantoneira Taurun T50-GOLD"
               class="acab-vert-img"
             />
             
@@ -477,7 +477,7 @@
 
         <!-- Conceito -->
         <div class="s2-concept" ref="s2Concept">
-          <p class="s2-concept-lead">O conceito central do T50-PRO é o</p>
+          <p class="s2-concept-lead">O conceito central do T50-GOLD é o</p>
           <strong class="s2-concept-key">TATAME UNIFICADO</strong>
           <p class="s2-concept-sub">Uma superfície. Sem divisões, fitas ou velcros.</p>
         </div>
@@ -522,7 +522,7 @@
         <div class="s2-image-frame" ref="s2ImageFrame">
           <img
             src="/hexafibra.jpg"
-            alt="Textura T50-PRO Taurun"
+            alt="Textura T50-GOLD Taurun"
             class="s2-hexaimg"
             ref="s2HexaImg"
           />
@@ -546,7 +546,7 @@
         <div class="ben-left-col">
           <div class="ben-header" ref="benHeader">
             <span class="ben-eyebrow">VANTAGENS COMPETITIVAS</span>
-            <h2 class="ben-title">Benefícios Chave do T50-PRO</h2>
+            <h2 class="ben-title">Benefícios Chave do T50-GOLD</h2>
           </div>
 
           <div class="ben-grid" ref="benGrid">
@@ -621,12 +621,12 @@
           </div>
         </div>
 
-        <!-- Coluna Direita: Imagem do Tatame T50-PRO (Flow Life) -->
+        <!-- Coluna Direita: Imagem do Tatame T50-GOLD (Flow Life) -->
         <div class="ben-right-col">
           <div class="ben-image-frame">
             <img
-              src="/t50-pro-flowlife.jpg"
-              alt="Tatame Taurun T50-PRO instalado em academia"
+              src="/T50-GOLD-flowlife.jpg"
+              alt="Tatame Taurun T50-GOLD instalado em academia"
               class="ben-tatame-img"
               ref="benImg"
             />
@@ -733,7 +733,7 @@
     </section>
 
     <!-- ═══════════════════════════════════════════
-         SLIDE 09 — Orçamento & Investimento Comercial (T50-PRO)
+         SLIDE 09 — Orçamento & Investimento Comercial (T50-GOLD)
     ════════════════════════════════════════════ -->
     <section
       class="slide slide-06"
@@ -743,7 +743,7 @@
       <div class="s6-container">
         <!-- Header -->
         <div class="s6-header" ref="s6Header">
-          <span class="s6-eyebrow">RESUMO DO ORÇAMENTO T50-PRO</span>
+          <span class="s6-eyebrow">RESUMO DO ORÇAMENTO T50-GOLD</span>
           <h2 class="s6-title">Investimento & Proposta</h2>
         </div>
 
@@ -775,11 +775,11 @@
           <!-- Tabela de Produtos / Itens Cotados -->
           <div class="s6-items-table">
 
-            <!-- Item 1: Tatame T50-PRO -->
+            <!-- Item 1: Tatame T50-GOLD -->
             <div class="s6-item-row">
               <div class="s6-item-info">
                 <span class="s6-item-badge">Produto Principal</span>
-                <h4 class="s6-item-name">Tatame Taurun T50-PRO</h4>
+                <h4 class="s6-item-name">Tatame Taurun T50-GOLD</h4>
                 <p class="s6-item-desc">{{ quote.quantityM2.value }}m² de superfície unificada de alta performance.</p>
               </div>
               <div class="s6-item-specs">
@@ -866,7 +866,7 @@
           <div class="s6-perks">
             <span class="s6-perk">✓ Fábrica própria com entrega garantida</span>
             <span class="s6-perk">✓ Projeto e instalação sob medida inclusos</span>
-            <span class="s6-perk">✓ Garantia oficial Taurun T50-PRO de alta performance</span>
+            <span class="s6-perk">✓ Garantia oficial Taurun T50-GOLD de alta performance</span>
           </div>
 
         </div>
@@ -1541,7 +1541,7 @@ function animateSlideMapa() {
   }, 0.2)
 }
 
-// ── GSAP — Slide Camadas (Estrutura T50-PRO Absorção Híbrida) ────────
+// ── GSAP — Slide Camadas (Estrutura T50-GOLD Absorção Híbrida) ────────
 function animateSlideCamadas() {
   const tl = gsap.timeline({ defaults: { ease: 'expo.out' } })
 
@@ -2129,7 +2129,7 @@ onMounted(async () => {
 }
 
 /* ══════════════════════════════════════════════════════════════
-   SLIDE 03 — A SOLUÇÃO: ESTRUTURA T50-PRO (ABSORÇÃO HÍBRIDA)
+   SLIDE 03 — A SOLUÇÃO: ESTRUTURA T50-GOLD (ABSORÇÃO HÍBRIDA)
    ══════════════════════════════════════════════════════════════ */
 .slide-camadas {
   align-items: center;
@@ -4067,3 +4067,4 @@ onMounted(async () => {
   box-shadow: 0 0 15px #f43f5e;
 }
 </style>
+
