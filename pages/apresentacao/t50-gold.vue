@@ -153,11 +153,11 @@
                   class="mapa-node-group"
                   ref="mapNodeEls"
                 >
-                  <!-- Pulso Ripple Animado -->
+                  <!-- Pulso Ripple Animado (proporcional ao node.size) -->
                   <circle
                     :cx="node.x"
                     :cy="node.y"
-                    r="14"
+                    :r="node.size * 2.5"
                     class="node-pulse-ring"
                   />
 
@@ -877,144 +877,66 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onBeforeUnmount, nextTick, reactive } from 'vue'
-import { useRouter } from 'vue-router'
-import gsap from 'gsap'
-import * as THREE from 'three'
-import { useQuote } from '~/composables/useQuote'
-
-const router = useRouter()
-
-function exitPresentation() {
-  router.push('/?tab=list')
-}
-
-useHead({
-  title: 'Taurun T50-GOLD — Apresentação Comercial',
-  meta: [{ name: 'description', content: 'Apresentação comercial do Tatame Taurun T50-GOLD sem encaixes.' }],
-})
-
-const quote = useQuote()
-
-// ── Slides & navegação ────────────────────────────────────────
-const slides = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-const currentSlide = ref(0)
-
-function nextSlide() {
-  if (currentSlide.value < slides.length - 1) goTo(currentSlide.value + 1)
-}
-function prevSlide() {
-  if (currentSlide.value > 0) goTo(currentSlide.value - 1)
-}
-function goTo(i: number) {
-  if (i === currentSlide.value) return
-  currentSlide.value = i
-  if (i === 0) animateSlide01()
-  if (i === 1) animateSlideMapa()
-  if (i === 2) animateSlideCamadas()
-  if (i === 3) animateSlideAbsorcao()
-  if (i === 4) animateSlideAcabamentos()
-  if (i === 5) animateSlide02()
-  if (i === 6) animateSlideBeneficios()
-  if (i === 7) animateSlide04()
-  if (i === 8) animateSlide05()
-  if (i === 9) animateSlide06()
-}
-
-// ── Refs slide 01 ──────────────────────────────────────────────
-const rootEl        = ref<HTMLElement>()
-const lineTop       = ref<HTMLElement>()
-const lineBottom    = ref<HTMLElement>()
-const logoContainer = ref<HTMLElement>()
-const logoImg       = ref<HTMLElement>()
-const taglineEl     = ref<HTMLElement>()
-
-// ── Refs & Dados do SLIDE 02 (Mapa Mundi Tech) ─────────
-const slideMapa     = ref<HTMLElement>()
-const mapaHeader    = ref<HTMLElement>()
-const mapaDesc      = ref<HTMLElement>()
-const mapaInfo      = ref<HTMLElement>()
-const mapaStatsGrid = ref<HTMLElement>()
-const mapaSvgCol    = ref<HTMLElement>()
-const mapaSvg       = ref<SVGElement>()
-const scannerLine   = ref<HTMLElement>()
-const gymCountEl    = ref<HTMLElement>()
-
-const animationProgress = ref(0)
-
-const mapNodeEls  = ref<SVGElement[]>([])
-const netLineEls  = ref<SVGLineElement[]>([])
-
-// Coordenadas Reais de Academias no Mundo em viewBox 30..814 x 241..700
-const mapNodes = [
+import { ref, computed, onMounted, onBeforeUnmount, nextTick, reactive } from 'vue'const mapNodes = [
   // ── BRASIL (CLUSTER PRINCIPAL — ALTA DENSIDADE) ──────────────
-  { x: 295, y: 580, size: 7.0 }, // SP Capital
-  { x: 285, y: 571, size: 5.0 }, // Campinas
-  { x: 301, y: 589, size: 5.0 }, // Santos
-  { x: 279, y: 561, size: 4.5 }, // Ribeirão Preto
-  { x: 308, y: 575, size: 7.0 }, // RJ Capital
-  { x: 298, y: 551, size: 6.0 }, // BH
-  { x: 313, y: 555, size: 4.5 }, // Vitória
-  { x: 280, y: 595, size: 6.0 }, // Curitiba
-  { x: 285, y: 608, size: 5.5 }, // Florianópolis
-  { x: 275, y: 620, size: 6.0 }, // Porto Alegre
-  { x: 291, y: 535, size: 7.0 }, // Brasília
-  { x: 282, y: 541, size: 5.0 }, // Goiânia
-  { x: 330, y: 518, size: 6.5 }, // Salvador
-  { x: 345, y: 490, size: 6.5 }, // Recife
-  { x: 335, y: 462, size: 6.5 }, // Fortaleza
-  { x: 310, y: 472, size: 5.0 }, // Teresina
-  { x: 295, y: 455, size: 6.0 }, // Belém
-  { x: 245, y: 465, size: 6.5 }, // Manaus
+  { x: 295, y: 580, size: 3.5 }, // SP Capital
+  { x: 285, y: 571, size: 2.5 }, // Campinas
+  { x: 301, y: 589, size: 2.5 }, // Santos
+  { x: 279, y: 561, size: 2.2 }, // Ribeirão Preto
+  { x: 308, y: 575, size: 3.5 }, // RJ Capital
+  { x: 298, y: 551, size: 3.0 }, // BH
+  { x: 313, y: 555, size: 2.2 }, // Vitória
+  { x: 280, y: 595, size: 3.0 }, // Curitiba
+  { x: 285, y: 608, size: 2.8 }, // Florianópolis
+  { x: 275, y: 620, size: 3.0 }, // Porto Alegre
+  { x: 291, y: 535, size: 3.5 }, // Brasília
+  { x: 282, y: 541, size: 2.5 }, // Goiânia
+  { x: 325, y: 518, size: 3.2 }, // Salvador
+  { x: 338, y: 498, size: 3.2 }, // Recife (costa nordeste)
   // Clusters adicionais Brasil
-  { x: 298, y: 584, size: 4.0 }, // Grande SP cluster
-  { x: 292, y: 577, size: 4.0 },
-  { x: 311, y: 578, size: 4.0 },
-  { x: 288, y: 538, size: 4.0 },
-  { x: 303, y: 568, size: 4.5 }, // Vale do Paraíba
-  { x: 277, y: 601, size: 4.0 }, // Interior SC
-  { x: 294, y: 544, size: 4.0 }, // Interior MG
-  { x: 318, y: 525, size: 4.5 }, // Norte RJ / Sul BA
-  { x: 340, y: 475, size: 4.0 }, // Natal
-  { x: 320, y: 468, size: 4.0 }, // João Pessoa
-  { x: 270, y: 540, size: 3.5 }, // Anápolis
-  { x: 270, y: 558, size: 3.5 }, // Campo Grande
-  { x: 262, y: 512, size: 3.5 }, // Cuiabá
-  { x: 248, y: 490, size: 4.0 }, // Porto Velho
+  { x: 298, y: 584, size: 2.0 }, // Grande SP cluster
+  { x: 292, y: 577, size: 2.0 },
+  { x: 311, y: 578, size: 2.0 },
+  { x: 288, y: 538, size: 2.0 },
+  { x: 303, y: 568, size: 2.2 }, // Vale do Paraíba
+  { x: 277, y: 601, size: 2.0 }, // Interior SC
+  { x: 294, y: 544, size: 2.0 }, // Interior MG
+  { x: 318, y: 525, size: 2.2 }, // Norte RJ / Sul BA
+  { x: 270, y: 558, size: 1.8 }, // Campo Grande
 
-  // ── CALIFÓRNIA — LA — SAN FRANCISCO (COORDENADAS EXATAS EUA) ─
-  { x: 123, y: 407, size: 7.0 }, // San Francisco / Bay Area
-  { x: 120, y: 413, size: 5.5 }, // San Jose
-  { x: 127, y: 423, size: 7.5 }, // Los Angeles
-  { x: 125, y: 420, size: 5.5 }, // LA - West Hollywood
-  { x: 129, y: 428, size: 5.0 }, // LA - Long Beach
-  { x: 131, y: 433, size: 5.5 }, // San Diego
+  // ── CALIFÓRNIA — LA — SAN FRANCISCO ─────────────────────
+  { x: 123, y: 407, size: 3.5 }, // San Francisco / Bay Area
+  { x: 120, y: 413, size: 2.8 }, // San Jose
+  { x: 127, y: 423, size: 3.8 }, // Los Angeles
+  { x: 125, y: 420, size: 2.8 }, // LA - West Hollywood
+  { x: 129, y: 428, size: 2.5 }, // LA - Long Beach
+  { x: 131, y: 433, size: 2.8 }, // San Diego
 
-  // ── TEXAS ─────────────────────────────────────────────────────
-  { x: 168, y: 443, size: 6.5 }, // Dallas
-  { x: 172, y: 449, size: 6.0 }, // Fort Worth / Dallas area
-  { x: 176, y: 453, size: 7.0 }, // Houston
-  { x: 168, y: 455, size: 5.0 }, // Austin
-  { x: 168, y: 461, size: 4.5 }, // San Antonio
+  // ── TEXAS ───────────────────────────────────────────────────
+  { x: 168, y: 443, size: 3.2 }, // Dallas
+  { x: 172, y: 449, size: 3.0 }, // Fort Worth / Dallas area
+  { x: 176, y: 453, size: 3.5 }, // Houston
+  { x: 168, y: 455, size: 2.5 }, // Austin
+  { x: 168, y: 461, size: 2.2 }, // San Antonio
 
   // ── BOLÍVIA ───────────────────────────────────────────────────
-  { x: 248, y: 573, size: 7.0 }, // La Paz / Santa Cruz
+  { x: 248, y: 573, size: 3.5 }, // La Paz / Santa Cruz
 
   // ── IRLANDA ───────────────────────────────────────────────────
-  { x: 389, y: 386, size: 7.0 }, // Dublin
+  { x: 389, y: 386, size: 3.5 }, // Dublin
 
   // ── ABU DHABI (EAU) ───────────────────────────────────────────
-  { x: 532, y: 468, size: 7.5 }, // Abu Dhabi / Dubai
+  { x: 532, y: 468, size: 3.8 }, // Abu Dhabi / Dubai
 
   // ── EUROPA (ESPALHADOS) ───────────────────────────────────────
-  { x: 401, y: 375, size: 6.0 }, // Londres (UK)
-  { x: 407, y: 390, size: 6.5 }, // Paris (França)
-  { x: 427, y: 372, size: 6.0 }, // Berlim (Alemanha)
-  { x: 438, y: 403, size: 5.5 }, // Roma (Itália)
-  { x: 383, y: 400, size: 5.5 }, // Madrid (Espanha)
-  { x: 420, y: 385, size: 4.5 }, // Amsterdam
-  { x: 445, y: 388, size: 4.5 }, // Viena
-  { x: 415, y: 365, size: 4.0 }  // Copenhague
+  { x: 401, y: 375, size: 3.0 }, // Londres (UK)
+  { x: 407, y: 390, size: 3.2 }, // Paris (França)
+  { x: 427, y: 372, size: 3.0 }, // Berlim (Alemanha)
+  { x: 438, y: 403, size: 2.8 }, // Roma (Itália)
+  { x: 383, y: 400, size: 2.8 }, // Madrid (Espanha)
+  { x: 420, y: 385, size: 2.2 }, // Amsterdam
+  { x: 445, y: 388, size: 2.2 }, // Viena
+  { x: 415, y: 365, size: 2.0 }  // Copenhague
 ]
 
 // Linhas de Rede conectando a malha global
@@ -1024,11 +946,8 @@ const networkConnections = [
   { x1: 295, y1: 580, x2: 298, y2: 551 }, // SP - BH
   { x1: 295, y1: 580, x2: 280, y2: 595 }, // SP - Curitiba
   { x1: 298, y1: 551, x2: 291, y2: 535 }, // BH - Brasília
-  { x1: 291, y1: 535, x2: 330, y2: 518 }, // Brasília - Salvador
-  { x1: 330, y1: 518, x2: 345, y2: 490 }, // Salvador - Recife
-  { x1: 345, y1: 490, x2: 335, y2: 462 }, // Recife - Fortaleza
-  { x1: 295, y1: 455, x2: 245, y2: 465 }, // Belém - Manaus
-  { x1: 291, y1: 535, x2: 245, y2: 465 }, // Brasília - Manaus
+  { x1: 291, y1: 535, x2: 325, y2: 518 }, // Brasília - Salvador
+  { x1: 325, y1: 518, x2: 338, y2: 498 }, // Salvador - Recife
 
   // Rotas Internacionais (Brasil -> Mundo)
   { x1: 295, y1: 580, x2: 248, y2: 573 }, // SP - Bolívia
