@@ -402,10 +402,10 @@
       :class="{ active: currentSlide === 4 }"
       ref="slideAcabamentos"
     >
-      <div class="acab-container">
+      <div class="acab-container-horiz">
         
-        <!-- Coluna Esquerda: Texto + Foto da Quina Grande + Instruções -->
-        <div class="acab-info-col">
+        <!-- Bloco Superior: Cabeçalho + Descrição + Grid 3 Colunas de Diferenciais -->
+        <div class="acab-top-block">
           <div class="acab-title-block" ref="acabHeader">
             <span class="acab-sup">DETALHES QUE FAZEM A DIFERENÇA</span>
             <h2 class="acab-title-italic">Acabamentos em Alto Padrão</h2>
@@ -415,9 +415,9 @@
             O <strong>T50-GOLD</strong> usa acabamentos nas quinas e nas laterais que proporcionam um aspecto altamente profissional, durabilidade extrema e segurança total para o seu tatame.
           </p>
 
-          <!-- Lista de Instruções / Diferenciais -->
-          <div class="acab-features-list">
-            <div class="acab-feature-item">
+          <!-- Grid de 3 Cards de Diferenciais -->
+          <div class="acab-features-grid">
+            <div class="acab-feature-card">
               <span class="acab-feature-icon">✓</span>
               <div class="acab-feature-text">
                 <strong>Acabamento profissional — Taurun Mat Corner</strong>
@@ -425,7 +425,7 @@
               </div>
             </div>
 
-            <div class="acab-feature-item">
+            <div class="acab-feature-card">
               <span class="acab-feature-icon">✓</span>
               <div class="acab-feature-text">
                 <strong>Tatame com Cantoneira Taurun T50-GOLD</strong>
@@ -433,7 +433,7 @@
               </div>
             </div>
 
-            <div class="acab-feature-item">
+            <div class="acab-feature-card">
               <span class="acab-feature-icon">✓</span>
               <div class="acab-feature-text">
                 <strong>Estética Impecável de Fábrica</strong>
@@ -443,15 +443,14 @@
           </div>
         </div>
 
-        <!-- Coluna Direita: Imagem Vertical sem a pílula/badge -->
-        <div class="acab-vert-col">
-          <div class="acab-vert-frame" ref="acabVertFrame">
+        <!-- Bloco Inferior: Frame Widescreen WIDE para Foto Deitada/Horizontal -->
+        <div class="acab-wide-col">
+          <div class="acab-wide-frame" ref="acabVertFrame">
             <img
-              src="/tatame-com-cantoneira.png"
-              alt="Tatame com Cantoneira Taurun T50-GOLD"
-              class="acab-vert-img"
+              src="/acabamentos-t50-gold.jpg"
+              alt="Academia com Tatame e Proteção de Parede Taurun T50-GOLD"
+              class="acab-wide-img"
             />
-            
             <div class="vert-frame-glow" />
           </div>
         </div>
@@ -2391,15 +2390,22 @@ onMounted(async () => {
   height: 100%;
 }
 
-.acab-container {
-  max-width: 1440px;
+.acab-container-horiz {
+  max-width: 1380px;
   width: 100%;
   height: 100%;
-  display: grid;
-  grid-template-columns: 46% 54%;
-  gap: clamp(2rem, 3.5vw, 4rem);
-  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: clamp(1rem, 2.2vh, 1.8rem);
   margin: 0 auto;
+  padding: 1.5rem 0;
+}
+
+.acab-top-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
 }
 
 .acab-info-col {
@@ -2444,40 +2450,28 @@ onMounted(async () => {
   font-weight: 600;
 }
 
-/* Foto da Quina grande e solta no canto esquerdo (sem caixa) */
-.acab-quina-standalone {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  margin: 0.5rem 0;
+.acab-features-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-top: 0.2rem;
 }
 
-.acab-quina-standalone-img {
-  width: clamp(240px, 22vw, 340px);
-  height: auto;
-  object-fit: contain;
-  filter: drop-shadow(0 15px 35px rgba(0, 0, 0, 0.8));
-  transition: transform 0.4s ease;
-}
-
-.acab-quina-standalone-img:hover {
-  transform: scale(1.05) rotate(-2deg);
-}
-
-.acab-features-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-.acab-feature-item {
+.acab-feature-card {
   display: flex;
   align-items: flex-start;
-  gap: 0.8rem;
-  background: rgba(255, 255, 255, 0.025);
+  gap: 0.75rem;
+  background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  padding: 0.8rem 1.1rem;
+  padding: 0.85rem 1.1rem;
   border-radius: 12px;
+  backdrop-filter: blur(8px);
+  transition: border-color 0.3s ease, transform 0.3s ease;
+}
+
+.acab-feature-card:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
 }
 
 .acab-feature-icon {
@@ -2505,20 +2499,17 @@ onMounted(async () => {
   line-height: 1.4;
 }
 
-/* ── Frame para Imagem Vertical (MAIOR) ── */
-.acab-vert-col {
+/* ── Frame para Imagem Widescreen Horizontal ── */
+.acab-wide-col {
+  width: 100%;
   display: flex;
-  align-items: center;
   justify-content: center;
-  height: 100%;
 }
 
-.acab-vert-frame {
+.acab-wide-frame {
   position: relative;
   width: 100%;
-  max-width: 540px;
-  height: 82vh;
-  max-height: 640px;
+  height: clamp(340px, 48vh, 500px);
   border-radius: 20px;
   border: 1px solid rgba(255, 255, 255, 0.15);
   background: rgba(0, 0, 0, 0.4);
@@ -2527,14 +2518,15 @@ onMounted(async () => {
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  transition: transform 0.4s ease, border-color 0.4s ease;
+  transition: border-color 0.4s ease, box-shadow 0.4s ease;
 }
 
-.acab-vert-frame:hover {
+.acab-wide-frame:hover {
   border-color: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8);
 }
 
-.acab-vert-img {
+.acab-wide-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -2542,8 +2534,8 @@ onMounted(async () => {
   transition: transform 0.6s ease;
 }
 
-.acab-vert-frame:hover .acab-vert-img {
-  transform: scale(1.03);
+.acab-wide-frame:hover .acab-wide-img {
+  transform: scale(1.025);
 }
 
 .vert-img-overlay-badge {
