@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <!-- Apresentação comercial — Taurun T50-GOLD -->
   <div
     class="pres-root"
@@ -625,7 +625,7 @@
         <div class="ben-right-col">
           <div class="ben-image-frame">
             <img
-              src="/T50-GOLD-flowlife.jpg"
+              src="/t50-pro-flowlife.jpg"
               alt="Tatame Taurun T50-GOLD instalado em academia"
               class="ben-tatame-img"
               ref="benImg"
