@@ -402,10 +402,10 @@
       :class="{ active: currentSlide === 4 }"
       ref="slideAcabamentos"
     >
-      <div class="acab-container-horiz">
+      <div class="acab-container">
         
-        <!-- Bloco Superior: Cabeçalho + Descrição + Grid 3 Colunas de Diferenciais -->
-        <div class="acab-top-block">
+        <!-- Coluna Esquerda: Texto + Lista de Diferenciais -->
+        <div class="acab-info-col">
           <div class="acab-title-block" ref="acabHeader">
             <span class="acab-sup">DETALHES QUE FAZEM A DIFERENÇA</span>
             <h2 class="acab-title-italic">Acabamentos em Alto Padrão</h2>
@@ -415,9 +415,9 @@
             O <strong>T50-GOLD</strong> usa acabamentos nas quinas e nas laterais que proporcionam um aspecto altamente profissional, durabilidade extrema e segurança total para o seu tatame.
           </p>
 
-          <!-- Grid de 3 Cards de Diferenciais -->
-          <div class="acab-features-grid">
-            <div class="acab-feature-card">
+          <!-- Lista de Diferenciais Vertical -->
+          <div class="acab-features-list">
+            <div class="acab-feature-item">
               <span class="acab-feature-icon">✓</span>
               <div class="acab-feature-text">
                 <strong>Acabamento profissional — Taurun Mat Corner</strong>
@@ -425,7 +425,7 @@
               </div>
             </div>
 
-            <div class="acab-feature-card">
+            <div class="acab-feature-item">
               <span class="acab-feature-icon">✓</span>
               <div class="acab-feature-text">
                 <strong>Tatame com Cantoneira Taurun T50-GOLD</strong>
@@ -433,7 +433,7 @@
               </div>
             </div>
 
-            <div class="acab-feature-card">
+            <div class="acab-feature-item">
               <span class="acab-feature-icon">✓</span>
               <div class="acab-feature-text">
                 <strong>Estética Impecável de Fábrica</strong>
@@ -443,13 +443,13 @@
           </div>
         </div>
 
-        <!-- Bloco Inferior: Frame Widescreen WIDE para Foto Deitada/Horizontal -->
-        <div class="acab-wide-col">
-          <div class="acab-wide-frame" ref="acabVertFrame">
+        <!-- Coluna Direita: Frame de Imagem em Destaque -->
+        <div class="acab-vert-col">
+          <div class="acab-vert-frame" ref="acabVertFrame">
             <img
               src="/acabamentos-t50-gold.jpg"
               alt="Academia com Tatame e Proteção de Parede Taurun T50-GOLD"
-              class="acab-wide-img"
+              class="acab-vert-img"
             />
             <div class="vert-frame-glow" />
           </div>
@@ -2390,22 +2390,15 @@ onMounted(async () => {
   height: 100%;
 }
 
-.acab-container-horiz {
-  max-width: 1380px;
+.acab-container {
+  max-width: 1440px;
   width: 100%;
   height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: clamp(1rem, 2.2vh, 1.8rem);
+  display: grid;
+  grid-template-columns: 46% 54%;
+  gap: clamp(2rem, 3.5vw, 4rem);
+  align-items: center;
   margin: 0 auto;
-  padding: 1.5rem 0;
-}
-
-.acab-top-block {
-  display: flex;
-  flex-direction: column;
-  gap: 0.9rem;
 }
 
 .acab-info-col {
@@ -2450,28 +2443,20 @@ onMounted(async () => {
   font-weight: 600;
 }
 
-.acab-features-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1rem;
-  margin-top: 0.2rem;
+.acab-features-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
 }
 
-.acab-feature-card {
+.acab-feature-item {
   display: flex;
   align-items: flex-start;
-  gap: 0.75rem;
-  background: rgba(255, 255, 255, 0.03);
+  gap: 0.8rem;
+  background: rgba(255, 255, 255, 0.025);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  padding: 0.85rem 1.1rem;
+  padding: 0.8rem 1.1rem;
   border-radius: 12px;
-  backdrop-filter: blur(8px);
-  transition: border-color 0.3s ease, transform 0.3s ease;
-}
-
-.acab-feature-card:hover {
-  border-color: rgba(255, 255, 255, 0.2);
-  transform: translateY(-2px);
 }
 
 .acab-feature-icon {
@@ -2499,21 +2484,23 @@ onMounted(async () => {
   line-height: 1.4;
 }
 
-/* ── Frame para Imagem Widescreen Horizontal ── */
-.acab-wide-col {
-  width: 100%;
+/* ── Frame para Imagem no lado direito (Estilo Slide 7) ── */
+.acab-vert-col {
   display: flex;
+  align-items: center;
   justify-content: center;
+  height: 100%;
 }
 
-.acab-wide-frame {
+.acab-vert-frame {
   position: relative;
   width: 100%;
-  height: clamp(380px, 55vh, 560px);
+  max-width: 680px;
+  height: clamp(380px, 60vh, 580px);
   border-radius: 20px;
   border: 1px solid rgba(255, 255, 255, 0.15);
-  background: rgba(8, 8, 10, 0.95);
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+  background: rgba(0, 0, 0, 0.4);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2521,21 +2508,21 @@ onMounted(async () => {
   transition: border-color 0.4s ease, box-shadow 0.4s ease;
 }
 
-.acab-wide-frame:hover {
+.acab-vert-frame:hover {
   border-color: rgba(255, 255, 255, 0.3);
   box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85);
 }
 
-.acab-wide-img {
+.acab-vert-img {
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
   object-position: center;
   transition: transform 0.6s ease;
 }
 
-.acab-wide-frame:hover .acab-wide-img {
-  transform: scale(1.025);
+.acab-vert-frame:hover .acab-vert-img {
+  transform: scale(1.03);
 }
 
 .vert-img-overlay-badge {
