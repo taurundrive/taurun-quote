@@ -279,7 +279,7 @@
           </div>
 
           <div class="camadas-logo-brand">
-            <img src="/camadas/t50-gold-logo.png" alt="T50-GOLD Logo" class="t50pro-logo-img" />
+            <img src="/camadas/t50-gold-logo.png" alt="T50-GOLD Logo" class="t50gold-logo-img" />
           </div>
 
           <p class="camadas-text-desc">
@@ -2342,11 +2342,10 @@ onMounted(async () => {
   top: -0.8em;
 }
 
-.t50pro-logo-img {
+.t50gold-logo-img {
   width: clamp(180px, 22vw, 320px);
   height: auto;
   display: block;
-  filter: brightness(0) invert(1);
 }
 
 .camadas-text-desc {
