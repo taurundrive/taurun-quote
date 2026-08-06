@@ -206,10 +206,10 @@
             @mousemove="handleMouseMoveStage"
             @mouseleave="handleMouseLeaveStage"
           >
-            <!-- Imagem 3D das Camadas do Tatame T50-PRO (Fundo 100% Transparente) -->
+            <!-- Imagem 3D das Camadas do Tatame T50-GOLD -->
             <img
-              src="/camadas/t50-pro-camadas.png"
-              alt="Camadas Tatame Taurun T50-PRO"
+              src="/camadas/t50-gold-camadas.png"
+              alt="Camadas Tatame Taurun T50-GOLD"
               class="camadas-render-img"
               ref="camadasImg"
             />
@@ -223,14 +223,14 @@
                 <polyline points="450,160 260,60 40,60" class="svg-line svg-line-c1" ref="svgLineC1" />
               </g>
 
-              <!-- Camada 02: Espuma de Alto Retorno (Meio -> Topo Direito onde marcado em vermelho) -->
+              <!-- Camada 02: Espuma Soft 10mm (Meio -> Topo Direito) -->
               <g class="svg-group-c2">
-                <circle cx="660" cy="310" r="4" class="svg-dot" />
-                <circle cx="660" cy="310" r="10" class="svg-dot-pulse" />
-                <polyline points="660,310 760,110 880,50" class="svg-line svg-line-c2" ref="svgLineC2" />
+                <circle cx="660" cy="300" r="4" class="svg-dot" />
+                <circle cx="660" cy="300" r="10" class="svg-dot-pulse" />
+                <polyline points="660,300 760,110 880,50" class="svg-line svg-line-c2" ref="svgLineC2" />
               </g>
 
-              <!-- Camada 03 Base: Granulado TS40 (Base -> Fora à Esquerda) -->
+              <!-- Camada 03 Base: Espuma Densa 30mm (Base -> Fora à Esquerda) -->
               <g class="svg-group-c3">
                 <circle cx="340" cy="440" r="4" class="svg-dot" />
                 <circle cx="340" cy="440" r="10" class="svg-dot-pulse" />
@@ -250,28 +250,28 @@
               </div>
             </div>
 
-            <!-- Callout Camada 02: Espuma de Alto Retorno -->
+            <!-- Callout Camada 02: Espuma Soft 10mm -->
             <div class="camadas-callout callout-c2" ref="contentC2">
               <div class="callout-box">
                 <span class="callout-badge">CAMADA 02</span>
-                <span class="callout-title">Espuma de alto retorno</span>
-                <span class="callout-tag">Recuperação rápida e amortecimento</span>
+                <span class="callout-title">Espuma Soft 10mm</span>
+                <span class="callout-tag">Segunda camada com 10mm de uma absorção menor para absorver os pequenos impactos e deixa-lo muito mais macio.</span>
               </div>
             </div>
 
-            <!-- Callout Camada 03: Granulado TS40 -->
+            <!-- Callout Camada 03: Espuma Densa 30mm -->
             <div class="camadas-callout callout-c3" ref="contentC3">
               <div class="callout-box">
                 <span class="callout-badge">CAMADA 03 BASE</span>
-                <span class="callout-title">Granulado TS40</span>
-                <span class="callout-tag">Base de alta densidade e absorção</span>
+                <span class="callout-title">Espuma Densa 30mm</span>
+                <span class="callout-tag">30mm de espuma com uma densidade maior para absorver os grandes impactos do tatame.</span>
               </div>
             </div>
 
           </div>
         </div>
 
-        <!-- Coluna Direita: Texto Alinhado ao Exemplo com Ênfase em Absorção Híbrida -->
+        <!-- Coluna Direita: Texto Alinhado com Logo T50-GOLD -->
         <div class="camadas-info-col" ref="camadasInfoCol">
           <div class="camadas-title-block">
             <span class="camadas-sup-label">MODELO DE</span>
@@ -279,7 +279,9 @@
           </div>
 
           <div class="camadas-logo-brand">
-            <img src="/camadas/t50-pro-logo.png" alt="T50-PRO Logo" class="t50pro-logo-img" />
+            <div class="t50gold-logo-wrap">
+              <span class="t50gold-logo-text">T50<span class="t50gold-logo-sub">GOLD</span><sup class="t50gold-tm">®</sup></span>
+            </div>
           </div>
 
           <p class="camadas-text-desc">
@@ -2310,6 +2312,36 @@ onMounted(async () => {
 
 .camadas-logo-brand {
   margin: 0.5rem 0;
+}
+
+.t50gold-logo-wrap {
+  display: inline-block;
+}
+
+.t50gold-logo-text {
+  font-family: 'Space Grotesk', 'Geist', 'Inter', sans-serif;
+  font-size: clamp(3rem, 5vw, 4.5rem);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  color: #ffffff;
+  display: inline-flex;
+  align-items: baseline;
+  line-height: 1;
+}
+
+.t50gold-logo-sub {
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+  margin-left: 0.15rem;
+}
+
+.t50gold-tm {
+  font-size: clamp(1rem, 1.5vw, 1.5rem);
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.7);
+  margin-left: 0.2rem;
+  top: -0.8em;
 }
 
 .t50pro-logo-img {
