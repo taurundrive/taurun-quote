@@ -107,29 +107,29 @@ const MOCK_SAVED_QUOTES: SavedQuote[] = [
 ]
 
 export const useQuote = () => {
-  // Estado dos campos do cliente
-  const clientName = ref('')
-  const clientPhone = ref('')
+  // Estado dos campos do cliente (compartilhados via useState para Nuxt 3)
+  const clientName = useState('quote_clientName', () => '')
+  const clientPhone = useState('quote_clientPhone', () => '')
 
   // Estado do produto selecionado e metragem
-  const selectedProductId = ref('revestimento-taurun')
-  const pricePerM2 = ref(180)
-  const quantityM2 = ref(50)
+  const selectedProductId = useState('quote_selectedProductId', () => 'revestimento-taurun')
+  const pricePerM2 = useState('quote_pricePerM2', () => 180)
+  const quantityM2 = useState('quote_quantityM2', () => 50)
 
   // Estado da opção Vinil Click
-  const hasVinilClick = ref(false)
-  const vinilQuantity = ref(10)
-  const vinilUnitPrice = ref(45)
+  const hasVinilClick = useState('quote_hasVinilClick', () => false)
+  const vinilQuantity = useState('quote_vinilQuantity', () => 10)
+  const vinilUnitPrice = useState('quote_vinilUnitPrice', () => 45)
 
   // Estado do vendedor responsável
-  const selectedSellerId = ref('fernando')
+  const selectedSellerId = useState('quote_selectedSellerId', () => 'fernando')
 
   // Lista de Orçamentos e Apresentações Salvas (carregadas do Neon DB)
-  const savedQuotes = ref<SavedQuote[]>([])
-  const isLoadingQuotes = ref(false)
+  const savedQuotes = useState<SavedQuote[]>('quote_savedQuotes', () => [])
+  const isLoadingQuotes = useState('quote_isLoadingQuotes', () => false)
 
   // Tema visual (dark por padrão para combinar com a identidade Taurun)
-  const isDarkMode = ref(true)
+  const isDarkMode = useState('quote_isDarkMode', () => true)
 
   // Retorna o objeto do produto atualmente selecionado
   const selectedProduct = computed(() => {
@@ -196,10 +196,11 @@ export const useQuote = () => {
     vinilUnitPrice.value = 45
   }
 
-  // Mudar tema claro / escuro
+  // Mudar tema claro / escuro e persistir no localStorage
   const toggleTheme = () => {
     isDarkMode.value = !isDarkMode.value
     if (process.client) {
+      localStorage.setItem('taurun_theme', String(isDarkMode.value))
       if (isDarkMode.value) {
         document.documentElement.classList.add('dark')
       } else {
@@ -332,6 +333,11 @@ export const useQuote = () => {
   const loadQuoteState = () => {
     if (!process.client) return
     try {
+      const savedTheme = localStorage.getItem('taurun_theme')
+      if (savedTheme !== null) {
+        isDarkMode.value = savedTheme === 'true'
+      }
+
       const savedDraft = localStorage.getItem('taurun_quote_draft')
       if (savedDraft) {
         const parsed = JSON.parse(savedDraft)
@@ -371,7 +377,11 @@ export const useQuote = () => {
   onMounted(() => {
     loadQuoteState()
     if (process.client) {
-      document.documentElement.classList.add('dark')
+      if (isDarkMode.value) {
+        document.documentElement.classList.add('dark')
+      } else {
+        document.documentElement.classList.remove('dark')
+      }
     }
   })
 

@@ -67,12 +67,12 @@
           <img src="/logo-taurun.png" alt="Taurun" class="taurun-logo" ref="logoImg" />
         </div>
         <div class="logo-line logo-line--bottom" ref="lineBottom" />
-        <p class="tagline" ref="taglineEl">T50-PRO — Tatame Profissional sem Encaixes</p>
+        <p class="tagline" ref="taglineEl">T50-GOLD — Tatame Profissional sem Encaixes</p>
       </div>
     </section>
 
     <!-- ═══════════════════════════════════════════
-         SLIDE 02 — Sucesso de Desempenho (Mapa Oficial do Brasil Tech e Animado - 10s)
+         SLIDE 02 — Sucesso de Desempenho (Mapa Mundi Tech e Animado - 10s)
     ════════════════════════════════════════════ -->
     <section
       class="slide slide-mapa"
@@ -91,34 +91,34 @@
           </div>
 
           <p class="mapa-desc" ref="mapaDesc">
-            O modelo <strong>Taurun T50-PRO sem encaixes</strong> é um sucesso de desempenho e já tem sido adquirido por centenas de academias no Brasil.
+            O modelo <strong>Taurun T50-GOLD sem encaixes</strong> é um sucesso de desempenho e já tem sido adquirido por centenas de academias no Brasil e no mundo.
           </p>
 
-          <!-- Quadro Único Grande: 900+ Academias Atendidas crescendo gradativamente -->
+          <!-- Quadro Único Grande: 1000+ Academias Atendidas crescendo gradativamente -->
           <div class="mapa-single-stat-card" ref="mapaStatsGrid">
             <div class="mapa-big-number-wrap">
               <span class="mapa-big-number" ref="gymCountEl">0</span>
               <span class="mapa-big-plus">+</span>
             </div>
-            <span class="mapa-big-label">Academias Atendidas no Brasil</span>
+            <span class="mapa-big-label">Academias Atendidas no Mundo</span>
           </div>
 
         </div>
 
-        <!-- Coluna Direita: Mapa Físico e Oficial do Brasil com Fronteiras Estaduais -->
+        <!-- Coluna Direita: Mapa Físico e Oficial Mundi com Fronteiras -->
         <div class="mapa-svg-col" ref="mapaSvgCol">
           <div class="mapa-svg-wrapper">
             
             <!-- Linha de Varredura Laser (Scanner Line) -->
             <div class="mapa-scanner-line" ref="scannerLine" />
 
-            <!-- Imagem Vetorial Oficial dos Estados do Brasil (com contorno de alta fidelidade) -->
-            <img src="/brazil.svg" alt="Mapa de Estados do Brasil" class="mapa-br-svg-img" />
+            <!-- Imagem Vetorial Oficial do Mapa Mundi -->
+            <img src="/world.svg" alt="Mapa Mundi" class="mapa-br-svg-img" />
 
             <!-- Camada SVG de Conexões e Nós de Academias Sincronizados com o Mapa -->
             <svg
               class="mapa-overlay-svg"
-              viewBox="0 0 100 100"
+              viewBox="30.767 241.591 784.077 458.627"
               preserveAspectRatio="xMidYMid meet"
               ref="mapaSvg"
             >
@@ -129,9 +129,9 @@
                 </radialGradient>
               </defs>
 
-              <rect width="100" height="100" fill="url(#brCenterGlow)" />
+              <rect width="1000" height="1000" fill="url(#brCenterGlow)" />
 
-              <!-- Conexões de Rede Inter-capitais -->
+              <!-- Conexões de Rede Globais -->
               <g class="mapa-net-lines">
                 <line
                   v-for="(line, idx) in networkConnections"
@@ -157,7 +157,7 @@
                   <circle
                     :cx="node.x"
                     :cy="node.y"
-                    r="1.8"
+                    r="14"
                     class="node-pulse-ring"
                   />
 
@@ -165,7 +165,7 @@
                   <circle
                     :cx="node.x"
                     :cy="node.y"
-                    :r="node.size + 0.3"
+                    :r="node.size + 2"
                     fill="rgba(255,255,255,0.3)"
                   />
 
@@ -180,15 +180,15 @@
                 </g>
               </g>
 
-              <!-- Labels de Principais Hubs Nacionais -->
+              <!-- Labels de Principais Hubs Globais -->
               <g class="mapa-hubs-labels">
                 <g v-for="hub in hubLabels" :key="hub.name" class="mapa-hub-item" :transform="`translate(${hub.x}, ${hub.y})`">
-                  <circle cx="0" cy="0" r="0.6" fill="#ffffff" />
+                  <circle cx="0" cy="0" r="3" fill="#ffffff" />
                   <text
                     :x="hub.dx"
                     :y="hub.dy"
                     fill="rgba(255,255,255,0.85)"
-                    font-size="2"
+                    font-size="12"
                     font-family="Geist, sans-serif"
                     font-weight="700"
                     letter-spacing="0.05em"
@@ -893,7 +893,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onBeforeUnmount, nextTick } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount, nextTick, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import gsap from 'gsap'
 import * as THREE from 'three'
@@ -906,8 +906,8 @@ function exitPresentation() {
 }
 
 useHead({
-  title: 'Taurun T50-PRO — Apresentação Comercial',
-  meta: [{ name: 'description', content: 'Apresentação comercial do Tatame Taurun T50-PRO sem encaixes.' }],
+  title: 'Taurun T50-GOLD — Apresentação Comercial',
+  meta: [{ name: 'description', content: 'Apresentação comercial do Tatame Taurun T50-GOLD sem encaixes.' }],
 })
 
 const quote = useQuote()
@@ -945,7 +945,7 @@ const logoContainer = ref<HTMLElement>()
 const logoImg       = ref<HTMLElement>()
 const taglineEl     = ref<HTMLElement>()
 
-// ── Refs & Dados do SLIDE 02 (Mapa do Brasil Tech 10s) ─────────
+// ── Refs & Dados do SLIDE 02 (Mapa Mundi Tech) ─────────
 const slideMapa     = ref<HTMLElement>()
 const mapaHeader    = ref<HTMLElement>()
 const mapaDesc      = ref<HTMLElement>()
@@ -961,143 +961,95 @@ const animationProgress = ref(0)
 const mapNodeEls  = ref<SVGElement[]>([])
 const netLineEls  = ref<SVGLineElement[]>([])
 
-// Coordenadas Reais de Academias no Brasil em viewBox 0..100 (alinhadas ao Mapa Oficial)
+// Coordenadas Reais de Academias no Mundo em viewBox 30..814 x 241..700
 const mapNodes = [
-  // SUDESTE (SP, RJ, MG, ES)
-  { x: 61, y: 69, size: 1.0 }, // SP Capital
-  { x: 59, y: 67, size: 0.7 }, // Campinas
-  { x: 62, y: 71, size: 0.7 }, // Santos
-  { x: 57, y: 65, size: 0.7 }, // Ribeirão Preto
-  { x: 55, y: 67, size: 0.6 }, // Bauru
-  { x: 63, y: 68, size: 0.6 }, // SJC
-  { x: 68, y: 68, size: 1.0 }, // RJ Capital
-  { x: 69, y: 68, size: 0.7 }, // Niterói
-  { x: 66, y: 67, size: 0.6 }, // Volta Redonda
-  { x: 71, y: 66, size: 0.6 }, // Macaé
-  { x: 64, y: 61, size: 0.9 }, // BH
-  { x: 56, y: 60, size: 0.7 }, // Uberlândia
-  { x: 58, y: 61, size: 0.6 }, // Uberaba
-  { x: 66, y: 65, size: 0.7 }, // Juiz de Fora
-  { x: 66, y: 56, size: 0.6 }, // Montes Claros
-  { x: 73, y: 62, size: 0.8 }, // Vitória
-  { x: 72, y: 63, size: 0.6 }, // Vila Velha
+  // BRASIL (NÚCLEO PRINCIPAL MANTIDO)
+  { x: 295, y: 580, size: 7.0 }, // SP Capital
+  { x: 285, y: 570, size: 5.0 }, // Campinas
+  { x: 300, y: 588, size: 5.0 }, // Santos
+  { x: 280, y: 560, size: 4.5 }, // Ribeirão Preto
+  { x: 308, y: 575, size: 7.0 }, // RJ Capital
+  { x: 298, y: 550, size: 6.0 }, // BH
+  { x: 312, y: 555, size: 4.5 }, // Vitória
+  { x: 280, y: 595, size: 6.0 }, // Curitiba
+  { x: 285, y: 608, size: 5.5 }, // Florianópolis
+  { x: 275, y: 625, size: 6.0 }, // Porto Alegre
+  { x: 290, y: 535, size: 7.0 }, // Brasília
+  { x: 282, y: 540, size: 5.0 }, // Goiânia
+  { x: 330, y: 518, size: 6.5 }, // Salvador
+  { x: 345, y: 490, size: 6.5 }, // Recife
+  { x: 335, y: 462, size: 6.5 }, // Fortaleza
+  { x: 310, y: 472, size: 5.0 }, // Teresina / São Luís
+  { x: 295, y: 455, size: 6.0 }, // Belém
+  { x: 245, y: 465, size: 6.5 }, // Manaus
+  
+  // DENSIDADE BRASIL CLUSTERS
+  { x: 298, y: 583, size: 4.0 },
+  { x: 292, y: 577, size: 4.0 },
+  { x: 310, y: 577, size: 4.0 },
+  { x: 288, y: 538, size: 4.0 },
 
-  // SUL (PR, SC, RS)
-  { x: 55, y: 75, size: 0.9 }, // Curitiba
-  { x: 52, y: 72, size: 0.7 }, // Londrina
-  { x: 50, y: 72, size: 0.7 }, // Maringá
-  { x: 47, y: 76, size: 0.6 }, // Foz do Iguaçu
-  { x: 57, y: 80, size: 0.9 }, // Florianópolis
-  { x: 57, y: 77, size: 0.7 }, // Joinville
-  { x: 56, y: 79, size: 0.6 }, // Blumenau
-  { x: 51, y: 79, size: 0.6 }, // Chapecó
-  { x: 53, y: 87, size: 0.9 }, // Porto Alegre
-  { x: 53, y: 84, size: 0.7 }, // Caxias do Sul
-  { x: 51, y: 91, size: 0.6 }, // Pelotas
-  { x: 47, y: 86, size: 0.6 }, // Santa Maria
+  // INTERNACIONAL EXIGIDO
+  // CALIFORNIA (EUA)
+  { x: 135, y: 370, size: 7.5 }, // Los Angeles / CA
+  { x: 130, y: 360, size: 6.0 }, // San Francisco
+  { x: 140, y: 380, size: 5.0 }, // San Diego
 
-  // CENTRO-OESTE (DF, GO, MT, MS)
-  { x: 56, y: 52, size: 1.0 }, // Brasília
-  { x: 54, y: 54, size: 0.8 }, // Goiânia
-  { x: 55, y: 53, size: 0.6 }, // Anápolis
-  { x: 55, y: 49, size: 0.6 }, // Rio Verde
-  { x: 41, y: 53, size: 0.8 }, // Cuiabá
-  { x: 43, y: 56, size: 0.6 }, // Rondonópolis
-  { x: 39, y: 51, size: 0.6 }, // Sinop
-  { x: 44, y: 64, size: 0.8 }, // Campo Grande
-  { x: 43, y: 67, size: 0.6 }, // Dourados
+  // BOLÍVIA
+  { x: 245, y: 565, size: 7.0 }, // Bolívia (La Paz / Santa Cruz)
 
-  // NORDESTE (BA, PE, CE, RN, PB, AL, SE, PI, MA)
-  { x: 79, y: 46, size: 1.0 }, // Salvador
-  { x: 77, y: 45, size: 0.7 }, // Feira de Santana
-  { x: 72, y: 52, size: 0.6 }, // Vitória da Conquista
-  { x: 74, y: 43, size: 0.6 }, // Juazeiro
-  { x: 83, y: 42, size: 0.7 }, // Aracaju
-  { x: 85, y: 39, size: 0.7 }, // Maceió
-  { x: 87, y: 36, size: 1.0 }, // Recife
-  { x: 85, y: 36, size: 0.6 }, // Caruaru
-  { x: 78, y: 38, size: 0.6 }, // Petrolina
-  { x: 88, y: 33, size: 0.7 }, // João Pessoa
-  { x: 86, y: 33, size: 0.6 }, // Campina Grande
-  { x: 88, y: 30, size: 0.8 }, // Natal
-  { x: 81, y: 24, size: 1.0 }, // Fortaleza
-  { x: 79, y: 23, size: 0.6 }, // Sobral
-  { x: 80, y: 30, size: 0.6 }, // Juazeiro do Norte
-  { x: 73, y: 30, size: 0.7 }, // Teresina
-  { x: 74, y: 24, size: 0.6 }, // Parnaíba
-  { x: 69, y: 22, size: 0.8 }, // São Luís
-  { x: 63, y: 31, size: 0.6 }, // Imperatriz
+  // IRLANDA
+  { x: 385, y: 348, size: 7.0 }, // Irlanda (Dublin)
 
-  // NORTE (PA, AM, AP, RR, RO, AC, TO)
-  { x: 59, y: 18, size: 0.9 }, // Belém
-  { x: 45, y: 20, size: 0.6 }, // Santarém
-  { x: 60, y: 28, size: 0.6 }, // Marabá
-  { x: 29, y: 20, size: 0.9 }, // Manaus
-  { x: 37, y: 21, size: 0.6 }, // Parintins
-  { x: 57, y: 12, size: 0.7 }, // Macapá
-  { x: 29, y: 8,  size: 0.7 }, // Boa Vista
-  { x: 25, y: 39, size: 0.7 }, // Porto Velho
-  { x: 29, y: 43, size: 0.6 }, // Ji-Paraná
-  { x: 15, y: 40, size: 0.7 }, // Rio Branco
-  { x: 60, y: 39, size: 0.7 }, // Palmas
-  { x: 60, y: 34, size: 0.6 }, // Araguaína
+  // ABU DHABI (EAU)
+  { x: 532, y: 468, size: 7.5 }, // Abu Dhabi / Dubai
 
-  // CLUSTERS DE DENSIDADE (São Paulo, Rio, BH, Curitiba, Brasília)
-  { x: 61.5, y: 69.5, size: 0.5 },
-  { x: 60.5, y: 68.8, size: 0.5 },
-  { x: 68.5, y: 68.5, size: 0.5 },
-  { x: 64.5, y: 61.2, size: 0.5 },
-  { x: 55.5, y: 75.3, size: 0.5 },
-  { x: 56.5, y: 52.3, size: 0.5 },
-  { x: 79.5, y: 46.5, size: 0.5 },
-  { x: 87.5, y: 36.5, size: 0.5 },
-  { x: 81.5, y: 24.5, size: 0.5 }
+  // EUROPA (OUTROS PAÍSES ALEATÓRIOS)
+  { x: 398, y: 362, size: 6.0 }, // UK (Londres)
+  { x: 405, y: 375, size: 6.5 }, // França (Paris)
+  { x: 425, y: 365, size: 6.0 }, // Alemanha (Berlim)
+  { x: 435, y: 400, size: 6.0 }, // Itália (Roma)
+  { x: 380, y: 395, size: 5.5 }  // Espanha (Madrid)
 ]
 
-// Linhas de Rede conectando as capitais brasileiras
+// Linhas de Rede conectando a malha global
 const networkConnections = [
-  { x1: 61, y1: 69, x2: 68, y2: 68 }, // SP - RJ
-  { x1: 61, y1: 69, x2: 64, y2: 61 }, // SP - BH
-  { x1: 61, y1: 69, x2: 55, y2: 75 }, // SP - Curitiba
-  { x1: 64, y1: 61, x2: 56, y2: 52 }, // BH - Brasília
-  { x1: 56, y1: 52, x2: 54, y2: 54 }, // Brasília - Goiânia
-  { x1: 55, y1: 75, x2: 57, y2: 80 }, // Curitiba - Floripa
-  { x1: 57, y1: 80, x2: 53, y2: 87 }, // Floripa - POA
-  { x1: 68, y1: 68, x2: 73, y2: 62 }, // RJ - Vitória
-  { x1: 73, y1: 62, x2: 79, y2: 46 }, // Vitória - Salvador
-  { x1: 79, y1: 46, x2: 83, y2: 42 }, // Salvador - Aracaju
-  { x1: 83, y1: 42, x2: 85, y2: 39 }, // Aracaju - Maceió
-  { x1: 85, y1: 39, x2: 87, y2: 36 }, // Maceió - Recife
-  { x1: 87, y1: 36, x2: 88, y2: 33 }, // Recife - João Pessoa
-  { x1: 88, y1: 33, x2: 88, y2: 30 }, // João Pessoa - Natal
-  { x1: 88, y1: 30, x2: 81, y2: 24 }, // Natal - Fortaleza
-  { x1: 81, y1: 24, x2: 73, y2: 30 }, // Fortaleza - Teresina
-  { x1: 73, y1: 30, x2: 69, y2: 22 }, // Teresina - São Luís
-  { x1: 69, y1: 22, x2: 59, y2: 18 }, // São Luís - Belém
-  { x1: 59, y1: 18, x2: 29, y2: 20 }, // Belém - Manaus
-  { x1: 56, y1: 52, x2: 41, y2: 53 }, // Brasília - Cuiabá
-  { x1: 41, y1: 53, x2: 44, y2: 64 }, // Cuiabá - Campo Grande
-  { x1: 56, y1: 52, x2: 60, y2: 39 }, // Brasília - Palmas
-  { x1: 41, y1: 53, x2: 25, y2: 39 }, // Cuiabá - Porto Velho
-  { x1: 25, y1: 39, x2: 15, y2: 40 }  // Porto Velho - Rio Branco
+  // Brasil interno
+  { x1: 295, y1: 580, x2: 308, y2: 575 }, // SP - RJ
+  { x1: 295, y1: 580, x2: 298, y2: 550 }, // SP - BH
+  { x1: 295, y1: 580, x2: 280, y2: 595 }, // SP - Curitiba
+  { x1: 298, y1: 550, x2: 290, y2: 535 }, // BH - Brasília
+  { x1: 290, y1: 535, x2: 330, y2: 518 }, // Brasília - Salvador
+  { x1: 330, y1: 518, x2: 345, y2: 490 }, // Salvador - Recife
+  { x1: 345, y1: 490, x2: 335, y2: 462 }, // Recife - Fortaleza
+  { x1: 295, y1: 455, x2: 245, y2: 465 }, // Belém - Manaus
+  { x1: 290, y1: 535, x2: 245, y2: 465 }, // Brasília - Manaus
+
+  // Rotas Internacionais (Brasil -> Mundo & Conexões Mundiais)
+  { x1: 295, y1: 580, x2: 245, y2: 565 }, // SP - Bolívia
+  { x1: 295, y1: 580, x2: 135, y2: 370 }, // SP - Califórnia
+  { x1: 308, y1: 575, x2: 405, y2: 375 }, // RJ - França (Europa Hub)
+  { x1: 405, y1: 375, x2: 385, y2: 348 }, // França - Irlanda
+  { x1: 405, y1: 375, x2: 398, y2: 362 }, // França - UK
+  { x1: 405, y1: 375, x2: 425, y2: 365 }, // França - Alemanha
+  { x1: 405, y1: 375, x2: 435, y2: 400 }, // França - Itália
+  { x1: 405, y1: 375, x2: 532, y2: 468 }, // França - Abu Dhabi
+  { x1: 135, y1: 370, x2: 398, y2: 362 }  // Califórnia - UK
 ]
 
-// Labels de Capitais Hubs
+// Labels de Capitais & Hubs Globais
 const hubLabels = [
-  { name: 'SÃO PAULO',    x: 61, y: 69, dx: 1.5, dy: 0.8 },
-  { name: 'RIO DE JANEIRO',x: 68, y: 68, dx: 1.5, dy: 0.8 },
-  { name: 'BELO HORIZONTE',x: 64, y: 61, dx: 1.5, dy: -1.2 },
-  { name: 'CURITIBA',     x: 55, y: 75, dx: -10.5, dy: 0.8 },
-  { name: 'PORTO ALEGRE',  x: 53, y: 87, dx: 1.5, dy: 0.8 },
-  { name: 'BRASÍLIA',     x: 56, y: 52, dx: 1.5, dy: -1.2 },
-  { name: 'SALVADOR',     x: 79, y: 46, dx: 1.5, dy: 0.8 },
-  { name: 'RECIFE',       x: 87, y: 36, dx: 1.5, dy: 0.8 },
-  { name: 'FORTALEZA',    x: 81, y: 24, dx: 1.5, dy: -1.2 },
-  { name: 'BELÉM',        x: 59, y: 18, dx: 1.5, dy: -1.2 },
-  { name: 'MANAUS',       x: 29, y: 20, dx: -9.5, dy: 0.8 }
+  { name: 'SÃO PAULO',    x: 295, y: 580, dx: 12, dy: 14 },
+  { name: 'RIO DE JANEIRO',x: 308, y: 575, dx: 12, dy: -6 },
+  { name: 'BRASÍLIA',     x: 290, y: 535, dx: -65, dy: 4 },
+  { name: 'CALIFÓRNIA',   x: 135, y: 370, dx: -75, dy: -8 },
+  { name: 'BOLÍVIA',      x: 245, y: 565, dx: -55, dy: 14 },
+  { name: 'IRLANDA',      x: 385, y: 348, dx: -55, dy: -12 },
+  { name: 'ABU DHABI',    x: 532, y: 468, dx: 12, dy: 14 },
+  { name: 'EUROPA',       x: 405, y: 375, dx: 12, dy: -8 }
 ]
 
-// ── Refs Slide 03 Camadas (T50-PRO Absorção Híbrida) ─────────────────
+// ── Refs Slide 03 Camadas (T50-GOLD Absorção Híbrida) ─────────────────
 const slideCamadas   = ref<HTMLElement>()
 const camadasStage   = ref<HTMLElement>()
 const camadasImg     = ref<HTMLElement>()
@@ -1338,16 +1290,15 @@ function animateSlideAbsorcao() {
 }
 
 // ── Refs Slide 05 (Antes/Depois) ──────────────────────────────
-const s3Compare     = ref<HTMLElement>()
-const s3DepoisWrap  = ref<HTMLElement>()
-const s3Handle      = ref<HTMLElement>()
-const s3LabelAntes  = ref<HTMLElement>()
-const s3LabelDepois = ref<HTMLElement>()
-const s3Right       = ref<HTMLElement>()
-const s3TitleBlock  = ref<HTMLElement>()
-const s3Phrase1     = ref<HTMLElement>()
-const s3Phrase2     = ref<HTMLElement>()
-const s3Phrase3     = ref<HTMLElement>()
+const slide03      = ref<HTMLElement>()
+const s3Header     = ref<HTMLElement>()
+const s3Compare    = ref<HTMLElement>()
+const s3BeforeLabel= ref<HTMLElement>()
+const s3AfterLabel = ref<HTMLElement>()
+const s3PhrasesWrap= ref<HTMLElement>()
+const s3Phrase1    = ref<HTMLElement>()
+const s3Phrase2    = ref<HTMLElement>()
+const s3Phrase3    = ref<HTMLElement>()
 
 // ── Slide 06 refs & data (Etapas) ──────────────────────────────
 const slide04     = ref<HTMLElement>()
@@ -1427,13 +1378,13 @@ const etapas = [
   {
     number: '01',
     title: 'Projeto',
-    description: 'Disponibilizamos nossa equipe de arquitetos e designer gráficos para desenvolver cada aspecto visual do projeto T50-PRO com projeções 3D.',
+    description: 'Disponibilizamos nossa equipe de arquitetos e designer gráficos para desenvolver cada aspecto visual do projeto T50-GOLD com projeções 3D.',
     iconPath: 'M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5',
   },
   {
     number: '02',
     title: 'Produção',
-    description: 'O tatame T50-PRO é fabricado sob medida na nossa fábrica própria.',
+    description: 'O tatame T50-GOLD é fabricado sob medida na nossa fábrica própria.',
     iconPath: 'M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83',
   },
   {
@@ -1519,7 +1470,7 @@ function animateSlide01() {
     .to(taglineEl.value,     { autoAlpha: 1, y: 0, duration: 0.5, ease: 'power2.out' }, 1.1)
 }
 
-// ── GSAP — Slide 02 — MAPA DO BRASIL ANIMADO EM 10 SEGUNDOS ───
+// ── GSAP — Slide 02 — MAPA MUNDI ANIMADO EM 10 SEGUNDOS ───
 let mapTimeline: gsap.core.Timeline | null = null
 
 function animateSlideMapa() {
@@ -1594,9 +1545,9 @@ function animateSlideMapa() {
     }, 0.8)
   }
 
-  // 5. Incremento numérico contínuo do contador de 0 a 900+ (0.2s - 10s)
+  // 5. Incremento numérico contínuo do contador de 0 a 1000+ (0.2s - 10s)
   tl.to(counterObj, {
-    count: 900,
+    count: 1000,
     progress: 100,
     duration: 9.8,
     ease: 'power2.out',

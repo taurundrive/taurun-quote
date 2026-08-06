@@ -8,7 +8,7 @@
         <img
           src="/logo-taurun.png"
           alt="Taurun Tatames"
-          class="h-8 sm:h-9 w-auto object-contain brightness-0 invert dark:brightness-100 dark:invert-0 transition-all cursor-pointer"
+          class="h-8 sm:h-9 w-auto object-contain brightness-0 dark:brightness-100 transition-all cursor-pointer"
           @click="emit('changeTab', 'form')"
         />
 
