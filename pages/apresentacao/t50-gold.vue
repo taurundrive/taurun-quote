@@ -624,7 +624,7 @@
         <div class="ben-right-col">
           <div class="ben-image-frame">
             <img
-              src="/t50-pro-flowlife.jpg"
+              src="/t50-gold-beneficios.jpg"
               alt="Tatame Taurun T50-GOLD instalado em academia"
               class="ben-tatame-img"
               ref="benImg"
