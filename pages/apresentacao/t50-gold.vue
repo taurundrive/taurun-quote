@@ -2509,11 +2509,11 @@ onMounted(async () => {
 .acab-wide-frame {
   position: relative;
   width: 100%;
-  height: clamp(340px, 48vh, 500px);
+  height: clamp(380px, 55vh, 560px);
   border-radius: 20px;
   border: 1px solid rgba(255, 255, 255, 0.15);
-  background: rgba(0, 0, 0, 0.4);
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+  background: rgba(8, 8, 10, 0.95);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2523,13 +2523,13 @@ onMounted(async () => {
 
 .acab-wide-frame:hover {
   border-color: rgba(255, 255, 255, 0.3);
-  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85);
 }
 
 .acab-wide-img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   object-position: center;
   transition: transform 0.6s ease;
 }
