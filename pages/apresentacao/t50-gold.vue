@@ -428,7 +428,7 @@
             <div class="acab-feature-item">
               <span class="acab-feature-icon">✓</span>
               <div class="acab-feature-text">
-                <strong>Tatame com Cantoneira Taurun T50-GOLD</strong>
+                <strong>Acabamentos Profissionais</strong>
                 <span>Proteção lateral contínua com alinhamento perfeito sem pontas expostas.</span>
               </div>
             </div>
