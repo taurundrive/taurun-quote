@@ -91,7 +91,7 @@
           </div>
 
           <p class="mapa-desc" ref="mapaDesc">
-            O modelo <strong>Taurun T50-GOLD sem encaixes</strong> é um sucesso de desempenho e já tem sido adquirido por centenas de academias no Brasil e no mundo.
+            O Modelo T50-Gold foi pensado para atender uma exigência ainda maior em relação à absorção de impacto.
           </p>
 
           <!-- Quadro Único Grande: 1000+ Academias Atendidas crescendo gradativamente -->
@@ -180,23 +180,7 @@
                 </g>
               </g>
 
-              <!-- Labels de Principais Hubs Globais -->
-              <g class="mapa-hubs-labels">
-                <g v-for="hub in hubLabels" :key="hub.name" class="mapa-hub-item" :transform="`translate(${hub.x}, ${hub.y})`">
-                  <circle cx="0" cy="0" r="3" fill="#ffffff" />
-                  <text
-                    :x="hub.dx"
-                    :y="hub.dy"
-                    fill="rgba(255,255,255,0.85)"
-                    font-size="12"
-                    font-family="Geist, sans-serif"
-                    font-weight="700"
-                    letter-spacing="0.05em"
-                  >
-                    {{ hub.name }}
-                  </text>
-                </g>
-              </g>
+              <!-- Sem labels — somente pontos focais -->
             </svg>
           </div>
         </div>
@@ -963,90 +947,100 @@ const netLineEls  = ref<SVGLineElement[]>([])
 
 // Coordenadas Reais de Academias no Mundo em viewBox 30..814 x 241..700
 const mapNodes = [
-  // BRASIL (NÚCLEO PRINCIPAL MANTIDO)
+  // ── BRASIL (CLUSTER PRINCIPAL — ALTA DENSIDADE) ──────────────
   { x: 295, y: 580, size: 7.0 }, // SP Capital
-  { x: 285, y: 570, size: 5.0 }, // Campinas
-  { x: 300, y: 588, size: 5.0 }, // Santos
-  { x: 280, y: 560, size: 4.5 }, // Ribeirão Preto
+  { x: 285, y: 571, size: 5.0 }, // Campinas
+  { x: 301, y: 589, size: 5.0 }, // Santos
+  { x: 279, y: 561, size: 4.5 }, // Ribeirão Preto
   { x: 308, y: 575, size: 7.0 }, // RJ Capital
-  { x: 298, y: 550, size: 6.0 }, // BH
-  { x: 312, y: 555, size: 4.5 }, // Vitória
+  { x: 298, y: 551, size: 6.0 }, // BH
+  { x: 313, y: 555, size: 4.5 }, // Vitória
   { x: 280, y: 595, size: 6.0 }, // Curitiba
   { x: 285, y: 608, size: 5.5 }, // Florianópolis
-  { x: 275, y: 625, size: 6.0 }, // Porto Alegre
-  { x: 290, y: 535, size: 7.0 }, // Brasília
-  { x: 282, y: 540, size: 5.0 }, // Goiânia
+  { x: 275, y: 620, size: 6.0 }, // Porto Alegre
+  { x: 291, y: 535, size: 7.0 }, // Brasília
+  { x: 282, y: 541, size: 5.0 }, // Goiânia
   { x: 330, y: 518, size: 6.5 }, // Salvador
   { x: 345, y: 490, size: 6.5 }, // Recife
   { x: 335, y: 462, size: 6.5 }, // Fortaleza
-  { x: 310, y: 472, size: 5.0 }, // Teresina / São Luís
+  { x: 310, y: 472, size: 5.0 }, // Teresina
   { x: 295, y: 455, size: 6.0 }, // Belém
   { x: 245, y: 465, size: 6.5 }, // Manaus
-  
-  // DENSIDADE BRASIL CLUSTERS
-  { x: 298, y: 583, size: 4.0 },
+  // Clusters adicionais Brasil
+  { x: 298, y: 584, size: 4.0 }, // Grande SP cluster
   { x: 292, y: 577, size: 4.0 },
-  { x: 310, y: 577, size: 4.0 },
+  { x: 311, y: 578, size: 4.0 },
   { x: 288, y: 538, size: 4.0 },
+  { x: 303, y: 568, size: 4.5 }, // Vale do Paraíba
+  { x: 277, y: 601, size: 4.0 }, // Interior SC
+  { x: 294, y: 544, size: 4.0 }, // Interior MG
+  { x: 318, y: 525, size: 4.5 }, // Norte RJ / Sul BA
+  { x: 340, y: 475, size: 4.0 }, // Natal
+  { x: 320, y: 468, size: 4.0 }, // João Pessoa
+  { x: 270, y: 540, size: 3.5 }, // Anápolis
+  { x: 270, y: 558, size: 3.5 }, // Campo Grande
+  { x: 262, y: 512, size: 3.5 }, // Cuiabá
+  { x: 248, y: 490, size: 4.0 }, // Porto Velho
 
-  // INTERNACIONAL EXIGIDO
-  // CALIFORNIA (EUA)
-  { x: 135, y: 370, size: 7.5 }, // Los Angeles / CA
-  { x: 130, y: 360, size: 6.0 }, // San Francisco
-  { x: 140, y: 380, size: 5.0 }, // San Diego
+  // ── CALIFÓRNIA — LA — SAN FRANCISCO (COORDENADAS EXATAS EUA) ─
+  { x: 123, y: 407, size: 7.0 }, // San Francisco / Bay Area
+  { x: 120, y: 413, size: 5.5 }, // San Jose
+  { x: 127, y: 423, size: 7.5 }, // Los Angeles
+  { x: 125, y: 420, size: 5.5 }, // LA - West Hollywood
+  { x: 129, y: 428, size: 5.0 }, // LA - Long Beach
+  { x: 131, y: 433, size: 5.5 }, // San Diego
 
-  // BOLÍVIA
-  { x: 245, y: 565, size: 7.0 }, // Bolívia (La Paz / Santa Cruz)
+  // ── TEXAS ─────────────────────────────────────────────────────
+  { x: 168, y: 443, size: 6.5 }, // Dallas
+  { x: 172, y: 449, size: 6.0 }, // Fort Worth / Dallas area
+  { x: 176, y: 453, size: 7.0 }, // Houston
+  { x: 168, y: 455, size: 5.0 }, // Austin
+  { x: 168, y: 461, size: 4.5 }, // San Antonio
 
-  // IRLANDA
-  { x: 385, y: 348, size: 7.0 }, // Irlanda (Dublin)
+  // ── BOLÍVIA ───────────────────────────────────────────────────
+  { x: 248, y: 573, size: 7.0 }, // La Paz / Santa Cruz
 
-  // ABU DHABI (EAU)
+  // ── IRLANDA ───────────────────────────────────────────────────
+  { x: 389, y: 386, size: 7.0 }, // Dublin
+
+  // ── ABU DHABI (EAU) ───────────────────────────────────────────
   { x: 532, y: 468, size: 7.5 }, // Abu Dhabi / Dubai
 
-  // EUROPA (OUTROS PAÍSES ALEATÓRIOS)
-  { x: 398, y: 362, size: 6.0 }, // UK (Londres)
-  { x: 405, y: 375, size: 6.5 }, // França (Paris)
-  { x: 425, y: 365, size: 6.0 }, // Alemanha (Berlim)
-  { x: 435, y: 400, size: 6.0 }, // Itália (Roma)
-  { x: 380, y: 395, size: 5.5 }  // Espanha (Madrid)
+  // ── EUROPA (ESPALHADOS) ───────────────────────────────────────
+  { x: 401, y: 375, size: 6.0 }, // Londres (UK)
+  { x: 407, y: 390, size: 6.5 }, // Paris (França)
+  { x: 427, y: 372, size: 6.0 }, // Berlim (Alemanha)
+  { x: 438, y: 403, size: 5.5 }, // Roma (Itália)
+  { x: 383, y: 400, size: 5.5 }, // Madrid (Espanha)
+  { x: 420, y: 385, size: 4.5 }, // Amsterdam
+  { x: 445, y: 388, size: 4.5 }, // Viena
+  { x: 415, y: 365, size: 4.0 }  // Copenhague
 ]
 
 // Linhas de Rede conectando a malha global
 const networkConnections = [
   // Brasil interno
   { x1: 295, y1: 580, x2: 308, y2: 575 }, // SP - RJ
-  { x1: 295, y1: 580, x2: 298, y2: 550 }, // SP - BH
+  { x1: 295, y1: 580, x2: 298, y2: 551 }, // SP - BH
   { x1: 295, y1: 580, x2: 280, y2: 595 }, // SP - Curitiba
-  { x1: 298, y1: 550, x2: 290, y2: 535 }, // BH - Brasília
-  { x1: 290, y1: 535, x2: 330, y2: 518 }, // Brasília - Salvador
+  { x1: 298, y1: 551, x2: 291, y2: 535 }, // BH - Brasília
+  { x1: 291, y1: 535, x2: 330, y2: 518 }, // Brasília - Salvador
   { x1: 330, y1: 518, x2: 345, y2: 490 }, // Salvador - Recife
   { x1: 345, y1: 490, x2: 335, y2: 462 }, // Recife - Fortaleza
   { x1: 295, y1: 455, x2: 245, y2: 465 }, // Belém - Manaus
-  { x1: 290, y1: 535, x2: 245, y2: 465 }, // Brasília - Manaus
+  { x1: 291, y1: 535, x2: 245, y2: 465 }, // Brasília - Manaus
 
-  // Rotas Internacionais (Brasil -> Mundo & Conexões Mundiais)
-  { x1: 295, y1: 580, x2: 245, y2: 565 }, // SP - Bolívia
-  { x1: 295, y1: 580, x2: 135, y2: 370 }, // SP - Califórnia
-  { x1: 308, y1: 575, x2: 405, y2: 375 }, // RJ - França (Europa Hub)
-  { x1: 405, y1: 375, x2: 385, y2: 348 }, // França - Irlanda
-  { x1: 405, y1: 375, x2: 398, y2: 362 }, // França - UK
-  { x1: 405, y1: 375, x2: 425, y2: 365 }, // França - Alemanha
-  { x1: 405, y1: 375, x2: 435, y2: 400 }, // França - Itália
-  { x1: 405, y1: 375, x2: 532, y2: 468 }, // França - Abu Dhabi
-  { x1: 135, y1: 370, x2: 398, y2: 362 }  // Califórnia - UK
-]
-
-// Labels de Capitais & Hubs Globais
-const hubLabels = [
-  { name: 'SÃO PAULO',    x: 295, y: 580, dx: 12, dy: 14 },
-  { name: 'RIO DE JANEIRO',x: 308, y: 575, dx: 12, dy: -6 },
-  { name: 'BRASÍLIA',     x: 290, y: 535, dx: -65, dy: 4 },
-  { name: 'CALIFÓRNIA',   x: 135, y: 370, dx: -75, dy: -8 },
-  { name: 'BOLÍVIA',      x: 245, y: 565, dx: -55, dy: 14 },
-  { name: 'IRLANDA',      x: 385, y: 348, dx: -55, dy: -12 },
-  { name: 'ABU DHABI',    x: 532, y: 468, dx: 12, dy: 14 },
-  { name: 'EUROPA',       x: 405, y: 375, dx: 12, dy: -8 }
+  // Rotas Internacionais (Brasil -> Mundo)
+  { x1: 295, y1: 580, x2: 248, y2: 573 }, // SP - Bolívia
+  { x1: 295, y1: 580, x2: 127, y2: 423 }, // SP - Los Angeles
+  { x1: 308, y1: 575, x2: 407, y2: 390 }, // RJ - Paris (Europa Hub)
+  { x1: 407, y1: 390, x2: 389, y2: 386 }, // Paris - Irlanda
+  { x1: 407, y1: 390, x2: 401, y2: 375 }, // Paris - UK
+  { x1: 407, y1: 390, x2: 427, y2: 372 }, // Paris - Alemanha
+  { x1: 407, y1: 390, x2: 438, y2: 403 }, // Paris - Itália
+  { x1: 407, y1: 390, x2: 532, y2: 468 }, // Paris - Abu Dhabi
+  { x1: 127, y1: 423, x2: 168, y2: 443 }, // LA - Dallas
+  { x1: 127, y1: 423, x2: 401, y2: 375 }  // LA - UK
 ]
 
 // ── Refs Slide 03 Camadas (T50-GOLD Absorção Híbrida) ─────────────────
@@ -2100,7 +2094,8 @@ onMounted(async () => {
   width: 100%;
   height: 100%;
   object-fit: contain;
-  filter: brightness(0) invert(1) opacity(0.35) drop-shadow(0 0 10px rgba(255,255,255,0.1));
+  /* SVG já tem fill cinza-claro e stroke branco — só precisamos de opacidade */
+  opacity: 0.3;
   pointer-events: none;
 }
 
