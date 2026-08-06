@@ -330,8 +330,8 @@
             <!-- Callout Camada Soft Top (Esquerda Superior) -->
             <div class="abs-callout callout-soft" ref="calloutSoft">
               <div class="callout-box">
-                <span class="callout-badge">Camada Topo</span>
-                <span class="callout-title">Soft Top Ergonômico</span>
+                <span class="callout-badge">Camada Topo (10mm)</span>
+                <span class="callout-title">Camada Soft 10mm</span>
                 <span class="callout-tag">Amortece impacto focal de joelhos e cotovelos</span>
               </div>
             </div>
@@ -339,8 +339,8 @@
             <!-- Callout Camada Base (Direita Inferior) -->
             <div class="abs-callout callout-base" ref="calloutBase">
               <div class="callout-box">
-                <span class="callout-badge">Núcleo Estrutural</span>
-                <span class="callout-title">Base Densa TS40</span>
+                <span class="callout-badge">Núcleo Estrutural (30mm) — Total 40mm</span>
+                <span class="callout-title">Base Densa de 30mm</span>
                 <span class="callout-tag">Dissipa projeções ao solo sem tocar o piso</span>
               </div>
             </div>
