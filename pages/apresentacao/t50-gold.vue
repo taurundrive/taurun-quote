@@ -877,7 +877,75 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onBeforeUnmount, nextTick, reactive } from 'vue'const mapNodes = [
+import { ref, computed, onMounted, onBeforeUnmount, nextTick, reactive } from 'vue'
+import { useRouter } from 'vue-router'
+import gsap from 'gsap'
+import * as THREE from 'three'
+import { useQuote } from '~/composables/useQuote'
+
+const router = useRouter()
+
+function exitPresentation() {
+  router.push('/?tab=list')
+}
+
+useHead({
+  title: 'Taurun T50-GOLD — Apresentação Comercial',
+  meta: [{ name: 'description', content: 'Apresentação comercial do Tatame Taurun T50-GOLD sem encaixes.' }],
+})
+
+const quote = useQuote()
+
+// ── Slides & navegação ────────────────────────────────────────
+const slides = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+const currentSlide = ref(0)
+
+function nextSlide() {
+  if (currentSlide.value < slides.length - 1) goTo(currentSlide.value + 1)
+}
+function prevSlide() {
+  if (currentSlide.value > 0) goTo(currentSlide.value - 1)
+}
+function goTo(i: number) {
+  if (i === currentSlide.value) return
+  currentSlide.value = i
+  if (i === 0) animateSlide01()
+  if (i === 1) animateSlideMapa()
+  if (i === 2) animateSlideCamadas()
+  if (i === 3) animateSlideAbsorcao()
+  if (i === 4) animateSlideAcabamentos()
+  if (i === 5) animateSlide02()
+  if (i === 6) animateSlideBeneficios()
+  if (i === 7) animateSlide04()
+  if (i === 8) animateSlide05()
+  if (i === 9) animateSlide06()
+}
+
+// ── Refs slide 01 ──────────────────────────────────────────────
+const rootEl        = ref<HTMLElement>()
+const lineTop       = ref<HTMLElement>()
+const lineBottom    = ref<HTMLElement>()
+const logoContainer = ref<HTMLElement>()
+const logoImg       = ref<HTMLElement>()
+const taglineEl     = ref<HTMLElement>()
+
+// ── Refs & Dados do SLIDE 02 (Mapa Mundi Tech) ─────────
+const slideMapa     = ref<HTMLElement>()
+const mapaHeader    = ref<HTMLElement>()
+const mapaDesc      = ref<HTMLElement>()
+const mapaInfo      = ref<HTMLElement>()
+const mapaStatsGrid = ref<HTMLElement>()
+const mapaSvgCol    = ref<HTMLElement>()
+const mapaSvg       = ref<SVGElement>()
+const scannerLine   = ref<HTMLElement>()
+const gymCountEl    = ref<HTMLElement>()
+
+const animationProgress = ref(0)
+
+const mapNodeEls  = ref<SVGElement[]>([])
+const netLineEls  = ref<SVGLineElement[]>([])
+
+const mapNodes = [
   // ── BRASIL (CLUSTER PRINCIPAL — ALTA DENSIDADE) ──────────────
   { x: 295, y: 580, size: 3.5 }, // SP Capital
   { x: 285, y: 571, size: 2.5 }, // Campinas
