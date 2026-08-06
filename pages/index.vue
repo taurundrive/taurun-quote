@@ -153,18 +153,24 @@ const showModal = ref(false)
 const lastSavedQuote = ref<SavedQuote | null>(null)
 
 const handleGenerateProposal = () => {
-  lastSavedQuote.value = quote.saveCurrentQuoteToList()
+  const saved = quote.saveCurrentQuoteToList()
+  lastSavedQuote.value = saved
   showModal.value = true
+  quote.clearForm()
 }
 
 const handleOpenPresentation = () => {
   showModal.value = false
-  const targetPath = quote.selectedProductId.value === 't50-pro' ? '/apresentacao/t50-pro' : '/apresentacao/revestimento'
+  const pid = lastSavedQuote.value?.selectedProductId || quote.selectedProductId.value
+  let targetPath = '/apresentacao/revestimento'
+  if (pid === 't50-pro') targetPath = '/apresentacao/t50-pro'
+  if (pid === 't50-gold') targetPath = '/apresentacao/t50-gold'
   router.push(targetPath)
 }
 
 const handleGoToList = () => {
   showModal.value = false
+  quote.clearForm()
   activeTab.value = 'list'
 }
 </script>

@@ -316,6 +316,19 @@ export const useQuote = () => {
     saveQuoteState()
   }
 
+  // Limpa todos os campos de input do formulário para novo orçamento
+  const clearForm = () => {
+    clientName.value = ''
+    clientPhone.value = ''
+    quantityM2.value = 50
+    hasVinilClick.value = false
+    vinilQuantity.value = 10
+    vinilUnitPrice.value = 45
+    if (process.client) {
+      localStorage.removeItem('taurun_quote_draft')
+    }
+  }
+
   // Excluir um orçamento salvo no Neon DB
   const deleteSavedQuote = async (id: string) => {
     const previousQuotes = [...savedQuotes.value]
@@ -412,6 +425,7 @@ export const useQuote = () => {
     loadSavedQuoteIntoActive,
     deleteSavedQuote,
     fetchSavedQuotes,
+    clearForm,
     PRODUCTS,
     SELLERS
   }

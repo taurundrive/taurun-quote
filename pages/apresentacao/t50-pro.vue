@@ -902,6 +902,7 @@ import { useQuote } from '~/composables/useQuote'
 const router = useRouter()
 
 function exitPresentation() {
+  quote.clearForm()
   router.push('/?tab=list')
 }
 

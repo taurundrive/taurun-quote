@@ -184,7 +184,10 @@ const emit = defineEmits<{
 // Carrega os dados na sessão ativa do useQuote e redireciona para a apresentação
 const handleViewPresentation = (item: SavedQuote) => {
   quote.loadSavedQuoteIntoActive(item)
-  const targetPath = item.selectedProductId === 't50-pro' ? '/apresentacao/t50-pro' : '/apresentacao/revestimento'
+  const pid = item.selectedProductId
+  let targetPath = '/apresentacao/revestimento'
+  if (pid === 't50-pro') targetPath = '/apresentacao/t50-pro'
+  if (pid === 't50-gold') targetPath = '/apresentacao/t50-gold'
   router.push(targetPath)
 }
 
